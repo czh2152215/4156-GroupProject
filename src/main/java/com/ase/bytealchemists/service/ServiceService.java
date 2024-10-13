@@ -3,6 +3,8 @@ package com.ase.bytealchemists.service;
 import com.ase.bytealchemists.model.ServiceEntity;
 import com.ase.bytealchemists.repository.ServiceRepository;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +38,50 @@ public class ServiceService {
     double fixedRadius = 10.0;
     return serviceRepository.findByFilters(latitude, longitude,
         fixedRadius, category, availability);
+  }
+
+
+  /**
+   * Deletes a service by its ID.
+   *
+   * @param id the ID of the service to delete
+   * @return true if the service was successfully deleted, false if the service was not found
+   */
+  public boolean deleteServiceById(Long id) {
+    if (serviceRepository.existsById(id)) {
+      serviceRepository.deleteById(id);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Updates a service by its ID.
+   *
+   * @param id      the ID of the service to update
+   * @param service the updated service data
+   * @return the updated {@link ServiceEntity} if the service exists, otherwise null
+   */
+  public ServiceEntity updateService(Long id, ServiceEntity service) {
+    Optional<ServiceEntity> optionalService = serviceRepository.findById(id);
+    if (optionalService.isPresent()) {
+      ServiceEntity existingService = optionalService.get();
+      existingService.setName(service.getName());
+      existingService.setCategory(service.getCategory());
+      existingService.setLatitude(service.getLatitude());
+      existingService.setLongitude(service.getLongitude());
+      existingService.setAddress(service.getAddress());
+      existingService.setCity(service.getCity());
+      existingService.setState(service.getState());
+      existingService.setZipcode(service.getZipcode());
+      existingService.setContactNumber(service.getContactNumber());
+      existingService.setOperationHour(service.getOperationHour());
+      existingService.setAvailability(service.isAvailability());
+      // Save the updated entity
+      return serviceRepository.save(existingService);
+    } else {
+      return null;
+    }
   }
 }

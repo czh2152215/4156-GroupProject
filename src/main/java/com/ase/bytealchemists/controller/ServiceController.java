@@ -5,10 +5,7 @@ import com.ase.bytealchemists.service.ServiceService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -51,5 +48,42 @@ public class ServiceController {
 
     // Return the result with HTTP 200 OK status
     return ResponseEntity.ok(services);
+  }
+
+  /**
+   * Deletes a service by its ID.
+   *
+   * @param id the ID of the service to delete
+   * @return a ResponseEntity with appropriate HTTP status
+   */
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteService(@PathVariable Long id) {
+    boolean isDeleted = serviceService.deleteServiceById(id);
+    if (isDeleted) {
+      // Deletion successful, return HTTP 204 No Content
+      return ResponseEntity.noContent().build();
+    } else {
+      // Service not found, return HTTP 404 Not Found
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  /**
+   * Updates a service by its ID.
+   *
+   * @param id      the ID of the service to update
+   * @param service the updated service data
+   * @return a ResponseEntity containing the updated service and appropriate HTTP status
+   */
+  @PutMapping("/{id}")
+  public ResponseEntity<ServiceEntity> updateService(@PathVariable Long id, @RequestBody ServiceEntity service) {
+    ServiceEntity updatedService = serviceService.updateService(id, service);
+    if (updatedService != null) {
+      // Update successful, return the updated service with HTTP 200 OK
+      return ResponseEntity.ok(updatedService);
+    } else {
+      // Service not found, return HTTP 404 Not Found
+      return ResponseEntity.notFound().build();
+    }
   }
 }
