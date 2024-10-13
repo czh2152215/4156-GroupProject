@@ -3,6 +3,7 @@ package com.ase.bytealchemists.service;
 import com.ase.bytealchemists.model.ServiceEntity;
 import com.ase.bytealchemists.repository.ServiceRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,4 +53,26 @@ public class ServiceService {
   public ServiceEntity registerService(ServiceEntity serviceEntity) {
     return serviceRepository.save(serviceEntity);
   }
+
+  /**
+   * Retrieves all services for all categories.
+   *
+   * @return a list of all {@link ServiceEntity}
+   */
+
+  public List<ServiceEntity> getAllServices() {
+    return serviceRepository.findAll();
+  }
+
+  /**
+   * Retrieves a service by its id.
+   *
+   * @param id the id of the service to retrieve
+   * @return an Optional containing the service entity if found, or empty if not found
+   */
+
+  public Optional<ServiceEntity> getServiceById(Long id) {
+    return serviceRepository.findById(id);
+  }
+
 }

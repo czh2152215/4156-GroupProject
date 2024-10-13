@@ -7,12 +7,14 @@ import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -110,4 +112,32 @@ public class ServiceController {
     serviceService.registerService(serviceEntity);
     return new ResponseEntity<>("Service registered successfully", HttpStatus.CREATED);
   }
+
+  /**
+   * Retrieves all services for all categories.
+   *
+   * @return a list of all services
+   */
+  @GetMapping
+  public ResponseEntity<List<ServiceEntity>> getAllServices() {
+    List<ServiceEntity> services = serviceService.getAllServices();
+    return ResponseEntity.ok(services);
+  }
+
+  /**
+   * Retrieves all data for a service with the given id.
+   *
+   * @param id the id of the service to retrieve
+   * @return the service entity if found, or a 404 Not Found status if not found
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<ServiceEntity> getServiceById(@PathVariable Long id) {
+    Optional<ServiceEntity> service = serviceService.getServiceById(id);
+    if (service.isPresent()) {
+      return ResponseEntity.ok(service.get());
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 if service not found
+    }
+  }
+
 }
