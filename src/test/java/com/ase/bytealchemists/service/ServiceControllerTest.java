@@ -2,6 +2,7 @@ package com.ase.bytealchemists.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -16,6 +17,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class contains the unit tests for the ServiceController class.
@@ -89,5 +93,68 @@ public class ServiceControllerTest {
         .content(objectMapper.writeValueAsString(serviceEntity)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string("Category does not exist"));
+  }
+
+  @Test
+  void testQueryServices_ValidInput_ShouldReturn200() throws Exception {
+    // Arrange: mock the data and service response
+    ServiceEntity service1 = new ServiceEntity(
+        1L, "Shelter A", "shelters", 40.748817, -73.985428,
+        "123 Main St", "New York", "NY", "10001",
+        "123-456-7890", "9 AM - 5 PM", true);
+
+    ServiceEntity service2 = new ServiceEntity(
+        2L, "Shelter B", "shelters", 40.748817, -73.985428,
+        "456 Another St", "New York", "NY", "10002",
+        "987-654-3210", "10 AM - 6 PM", true);
+
+    List<ServiceEntity> services = Arrays.asList(service1, service2);
+
+    // Mock the service layer call
+    when(serviceService.queryServices(40.748817, -73.985428, "shelters", true))
+        .thenReturn(services);
+
+    // Act & Assert: Perform the GET request and verify the response
+    mockMvc.perform(get("/services/query")
+            .param("latitude", "40.748817")
+            .param("longitude", "-73.985428")
+            .param("category", "shelters")
+            .param("availability", "true")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].name").value("Shelter A"))
+        .andExpect(jsonPath("$[1].name").value("Shelter B"))
+        .andExpect(jsonPath("$[0].category").value("shelters"))
+        .andExpect(jsonPath("$[1].category").value("shelters"));
+  }
+
+  @Test
+  void testQueryServices_NoFilters_ShouldReturnEmptyList() throws Exception {
+    // Arrange: mock the service to return an empty list
+    when(serviceService.queryServices(null, null, null, null))
+        .thenReturn(Arrays.asList());
+
+    // Act & Assert: Perform the GET request with no filters and verify the response
+    mockMvc.perform(get("/services/query")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(0));
+  }
+
+  @Test
+  void testQueryServices_InvalidCategory_ShouldReturnEmptyList() throws Exception {
+    // Arrange: mock the service to return an empty list for an invalid category
+    when(serviceService.queryServices(40.748817, -73.985428, "invalid-category", true))
+        .thenReturn(Arrays.asList());
+
+    // Act & Assert: Perform the GET request and verify the response
+    mockMvc.perform(get("/services/query")
+            .param("latitude", "40.748817")
+            .param("longitude", "-73.985428")
+            .param("category", "invalid-category")
+            .param("availability", "true")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(0));
   }
 }
