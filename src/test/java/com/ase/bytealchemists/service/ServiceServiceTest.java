@@ -5,15 +5,17 @@ import static org.mockito.Mockito.when;
 
 import com.ase.bytealchemists.model.ServiceEntity;
 import com.ase.bytealchemists.repository.ServiceRepository;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * This class contains the unit tests for the ServiceService class.
+ */
 public class ServiceServiceTest {
 
   @Mock
@@ -62,7 +64,8 @@ public class ServiceServiceTest {
 
     // Verify the result
     assertEquals(1, result.size(), "There should be one service returned");
-    assertEquals("Food Bank A", result.get(0).getName(), "The service name should be 'Food Bank A'");
+    assertEquals("Food Bank A", result.get(0).getName(),
+        "The service name should be 'Food Bank A'");
   }
 
   @Test
@@ -75,7 +78,8 @@ public class ServiceServiceTest {
         .thenReturn(mockServices);
 
     // Call the service method with no matching results
-    List<ServiceEntity> result = serviceService.queryServices(40.748817, -73.985428, "Shelter", false);
+    List<ServiceEntity> result =
+        serviceService.queryServices(40.748817, -73.985428, "Shelter", false);
 
     // Verify the result
     assertEquals(0, result.size(), "There should be no services returned");

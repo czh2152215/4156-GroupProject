@@ -92,13 +92,15 @@ public class ServiceController {
   /**
    * Updates a service identified by its ID with the provided service data.
    *
-   * <p>This method supports partial updates, allowing clients to update one or more fields of a service
+   * <p>This method supports partial updates,
+   * allowing clients to update one or more fields of a service
    * without needing to provide the entire service data. Only the non-null fields in the provided
    * {@code service} object will be updated.</p>
    *
    * @param id      the ID of the service to update
    * @param service the service data containing the fields to be updated
-   * @return a {@link ResponseEntity} containing the updated {@link ServiceEntity} and the appropriate HTTP status:
+   * @return a {@link ResponseEntity} containing the updated {@link ServiceEntity}
+   *          and the appropriate HTTP status:
    *         <ul>
    *             <li>{@code 200 OK} if the update is successful</li>
    *             <li>{@code 404 Not Found} if the service with the given ID does not exist</li>
