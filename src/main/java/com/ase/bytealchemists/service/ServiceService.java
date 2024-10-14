@@ -39,6 +39,77 @@ public class ServiceService {
         fixedRadius, category, availability);
   }
 
+
+  /**
+   * Deletes a service by its ID.
+   *
+   * @param id the ID of the service to delete
+   * @return true if the service was successfully deleted, false if the service was not found
+   */
+  public boolean deleteServiceById(Long id) {
+    if (serviceRepository.existsById(id)) {
+      serviceRepository.deleteById(id);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Updates the service entity with the specified ID using the provided service data.
+   * Only the non-null fields in the {@code service} object will be updated.
+   *
+   * @param id      the ID of the service to update
+   * @param service the service data containing the fields to be updated
+   * @return the updated {@link ServiceEntity} if the service exists, otherwise {@code null}
+   */
+  public ServiceEntity updateService(Long id, ServiceEntity service) {
+    Optional<ServiceEntity> optionalService = serviceRepository.findById(id);
+    if (optionalService.isPresent()) {
+      ServiceEntity existingService = optionalService.get();
+
+      if (service.getName() != null) {
+        existingService.setName(service.getName());
+      }
+      if (service.getCategory() != null) {
+        existingService.setCategory(service.getCategory());
+      }
+      if (service.getLatitude() != null) {
+        existingService.setLatitude(service.getLatitude());
+      }
+      if (service.getLongitude() != null) {
+        existingService.setLongitude(service.getLongitude());
+      }
+      if (service.getAddress() != null) {
+        existingService.setAddress(service.getAddress());
+      }
+      if (service.getCity() != null) {
+        existingService.setCity(service.getCity());
+      }
+      if (service.getState() != null) {
+        existingService.setState(service.getState());
+      }
+      if (service.getZipcode() != null) {
+        existingService.setZipcode(service.getZipcode());
+      }
+      if (service.getContactNumber() != null) {
+        existingService.setContactNumber(service.getContactNumber());
+      }
+      if (service.getOperationHour() != null) {
+        existingService.setOperationHour(service.getOperationHour());
+      }
+      if (service.getAvailability() != null) {
+        existingService.setAvailability(service.getAvailability());
+      }
+
+      // Save the updated entity
+      return serviceRepository.save(existingService);
+    } else {
+      return null;
+    }
+  }
+
+
   /**
    * Registers a new service entity in the database.
    * This method saves the provided service entity to the database

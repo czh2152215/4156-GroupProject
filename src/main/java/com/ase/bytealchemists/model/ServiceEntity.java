@@ -45,12 +45,12 @@ public class ServiceEntity {
   // Latitude: between -90 and 90
   @DecimalMin(value = "-90.0", inclusive = true, message = "Latitude must be >= -90")
   @DecimalMax(value = "90.0", inclusive = true, message = "Latitude must be <= 90")
-  private double latitude;
+  private Double latitude;
 
   // Longitude: between -180 and 180
   @DecimalMin(value = "-180.0", inclusive = true, message = "Longitude must be >= -180")
   @DecimalMax(value = "180.0", inclusive = true, message = "Longitude must be <= 180")
-  private double longitude;
+  private Double longitude;
 
   @NotBlank(message = "Address cannot be blank")
   private String address;
@@ -70,6 +70,6 @@ public class ServiceEntity {
         message = "Operation hours must follow the format: '9 AM - 5 PM'")
   private String operationHour;
 
-  private boolean availability;
+  private Boolean availability;
 
 }

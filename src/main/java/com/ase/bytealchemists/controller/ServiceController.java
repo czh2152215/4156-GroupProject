@@ -13,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,6 +72,52 @@ public class ServiceController {
   }
 
   /**
+   * Deletes a service by its ID.
+   *
+   * @param id the ID of the service to delete
+   * @return a ResponseEntity with appropriate HTTP status
+   */
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteService(@PathVariable Long id) {
+    boolean isDeleted = serviceService.deleteServiceById(id);
+    if (isDeleted) {
+      // Deletion successful, return HTTP 204 No Content
+      return ResponseEntity.noContent().build();
+    } else {
+      // Service not found, return HTTP 404 Not Found
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  /**
+   * Updates a service identified by its ID with the provided service data.
+   *
+   * <p>This method supports partial updates, allowing clients to update one or more fields of a service
+   * without needing to provide the entire service data. Only the non-null fields in the provided
+   * {@code service} object will be updated.</p>
+   *
+   * @param id      the ID of the service to update
+   * @param service the service data containing the fields to be updated
+   * @return a {@link ResponseEntity} containing the updated {@link ServiceEntity} and the appropriate HTTP status:
+   *         <ul>
+   *             <li>{@code 200 OK} if the update is successful</li>
+   *             <li>{@code 404 Not Found} if the service with the given ID does not exist</li>
+   *         </ul>
+   */
+  @PutMapping("/{id}")
+  public ResponseEntity<ServiceEntity> updateService(@PathVariable Long id,
+                                                     @RequestBody ServiceEntity service) {
+    ServiceEntity updatedService = serviceService.updateService(id, service);
+    if (updatedService != null) {
+      // Update successful, return the updated service with HTTP 200 OK
+      return ResponseEntity.ok(updatedService);
+    } else {
+      // Service not found, return HTTP 404 Not Found
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  /**
    * End point for registering a new service.
    * This method validates the service entity and checks if the specified
    * category exists. If there are validation errors or the category
@@ -80,10 +128,10 @@ public class ServiceController {
    * @param serviceEntity the service entity to be registered,
    *                      containing service details like name, category,
    *                      and location information.
-   * 
+   *
    * @param bindingResult the binding result that holds validation errors
    *                      if the service entity is invalid.
-   * 
+   *
    * @return a ResponseEntity containing the result of the registration.
    *         Returns HTTP 400 if there are validation errors or the category
    *         does not exist. Returns HTTP 201 if the service is registered
@@ -139,5 +187,4 @@ public class ServiceController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 if service not found
     }
   }
-
 }
