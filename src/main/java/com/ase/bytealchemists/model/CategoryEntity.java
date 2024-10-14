@@ -1,5 +1,6 @@
 package com.ase.bytealchemists.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +12,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * Entity representing a category in the Homeless Support API.
- * This class maps to the "category" table in the database and represents a service category
+ * This class maps to the "category" table in the database and represents a
+ * service category
  * such as shelter, food bank, healthcare center, etc.
  *
  * @author Jason
@@ -28,5 +30,6 @@ public class CategoryEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false)
   private String categoryName;
 }
