@@ -1,9 +1,12 @@
 package com.ase.bytealchemists.service;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 
 /**
  * This class contains the unit tests for the ServiceController class.
@@ -156,4 +160,143 @@ public class ServiceControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(0));
   }
+
+  /**
+   * Tests the PUT /services/{id} endpoint with a full update.
+   * Expects a 200 OK status and the updated service entity.
+   */
+  @Test
+  void testUpdateService_FullUpdate_ValidInput_ShouldReturn200() throws Exception {
+    Long serviceId = 1L;
+    ServiceEntity existingService = new ServiceEntity(
+            serviceId, "Old Service Name", "shelters",
+            40.7128, -74.0060,
+            "123 Old St", "Old City", "NY", "10001",
+            "123-456-7890", "9 AM - 5 PM", true
+    );
+
+    ServiceEntity updatedService = new ServiceEntity(
+            serviceId, "Updated Service Name", "shelters",
+            40.7128, -74.0060,
+            "456 New St", "New City", "NY", "10002",
+            "987-654-3210", "10 AM - 6 PM", false
+    );
+
+    // Mock the serviceService.updateService method to return the updated service
+    when(serviceService.updateService(eq(serviceId),
+            any(ServiceEntity.class))).thenReturn(updatedService);
+
+    // Prepare the full update JSON data
+    String fullUpdateJson = objectMapper.writeValueAsString(updatedService);
+
+    mockMvc.perform(put("/services/{id}", serviceId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(fullUpdateJson))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(serviceId))
+            .andExpect(jsonPath("$.name").value("Updated Service Name"))
+            .andExpect(jsonPath("$.address").value("456 New St"))
+            .andExpect(jsonPath("$.zipcode").value("10002"))
+            .andExpect(jsonPath("$.contactNumber").value("987-654-3210"))
+            .andExpect(jsonPath("$.availability").value(false));
+  }
+
+  /**
+   * Tests the PUT /services/{id} endpoint with a partial update.
+   * Expects a 200 OK status and the updated service entity with only specified fields changed.
+   */
+  @Test
+  void testUpdateService_PartialUpdate_ValidInput_ShouldReturn200() throws Exception {
+    Long serviceId = 1L;
+    ServiceEntity existingService = new ServiceEntity(
+            serviceId, "Old Service Name", "shelters",
+            40.7128, -74.0060,
+            "123 Old St", "Old City", "NY", "10001",
+            "123-456-7890", "9 AM - 5 PM", true
+    );
+
+    // Updated fields: name and city
+    ServiceEntity partialUpdatedService = new ServiceEntity();
+    partialUpdatedService.setName("Updated Service Name");
+    partialUpdatedService.setCity("New City");
+
+    ServiceEntity returnedUpdatedService = new ServiceEntity(
+            serviceId, "Updated Service Name", "shelters",
+            40.7128, -74.0060,
+            "123 Old St", "New City", "NY", "10001",
+            "123-456-7890", "9 AM - 5 PM", true
+    );
+
+    // Mock the serviceService.updateService method to return the updated service
+    when(serviceService.updateService(eq(serviceId), any(ServiceEntity.class)))
+            .thenReturn(returnedUpdatedService);
+
+    // Prepare the partial update JSON data
+    String partialUpdateJson = "{ \"name\": \"Updated Service Name\", \"city\": \"New City\" }";
+
+    mockMvc.perform(put("/services/{id}", serviceId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(partialUpdateJson))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(serviceId))
+            .andExpect(jsonPath("$.name").value("Updated Service Name"))
+            .andExpect(jsonPath("$.city").value("New City"))
+            .andExpect(jsonPath("$.address").value("123 Old St")) // Unchanged field
+            .andExpect(jsonPath("$.zipcode").value("10001")) // Unchanged field
+            .andExpect(jsonPath("$.contactNumber").value("123-456-7890")) // Unchanged field
+            .andExpect(jsonPath("$.availability").value(true)); // Unchanged field
+  }
+
+  /**
+   * Tests the PUT /services/{id} endpoint when attempting to update a non-existing service.
+   * Expects a 404 Not Found status.
+   */
+  @Test
+  void testUpdateService_NonExistingId_ShouldReturn404() throws Exception {
+    Long serviceId = 999L;
+    ServiceEntity updateData = new ServiceEntity();
+    updateData.setName("Non-Existent Service");
+
+    // Mock the serviceService.updateService method to return null, indicating service not found
+    when(serviceService.updateService(eq(serviceId), any(ServiceEntity.class))).thenReturn(null);
+
+    // Prepare the update JSON data
+    String updateJson = objectMapper.writeValueAsString(updateData);
+
+    mockMvc.perform(put("/services/{id}", serviceId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(updateJson))
+            .andExpect(status().isNotFound());
+  }
+
+  /**
+   * Tests the DELETE /services/{id} endpoint for an existing service.
+   * Expects a 204 No Content status.
+   */
+  @Test
+  void testDeleteService_ExistingId_ShouldReturn204() throws Exception {
+    Long serviceId = 1L;
+
+    // Mock the serviceService.deleteServiceById method to return true, indicate successful deletion
+    when(serviceService.deleteServiceById(serviceId)).thenReturn(true);
+
+    mockMvc.perform(delete("/services/{id}", serviceId))
+            .andExpect(status().isNoContent());
+  }
+
+  /**
+   * Tests the DELETE /services/{id} endpoint when attempting to delete a non-existing service.
+   * Expects a 404 Not Found status.
+   */
+  @Test
+  void testDeleteService_NonExistingId_ShouldReturn404() throws Exception {
+    Long serviceId = 999L;
+
+    // Mock the serviceService.deleteServiceById method to return false, service not found
+    when(serviceService.deleteServiceById(serviceId)).thenReturn(false);
+
+    mockMvc.perform(delete("/services/{id}", serviceId))
+            .andExpect(status().isNotFound());
+  }
+
 }
