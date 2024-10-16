@@ -130,7 +130,6 @@ public class ServiceService {
    *
    * @return a list of all {@link ServiceEntity}
    */
-
   public List<ServiceEntity> getAllServices() {
     return serviceRepository.findAll();
   }
@@ -141,7 +140,6 @@ public class ServiceService {
    * @param id the id of the service to retrieve
    * @return an Optional containing the service entity if found, or empty if not found
    */
-
   public Optional<ServiceEntity> getServiceById(Long id) {
     return serviceRepository.findById(id);
   }

@@ -1,8 +1,10 @@
 package com.ase.bytealchemists.repository;
 
 import com.ase.bytealchemists.model.CategoryEntity;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -50,4 +52,12 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
    * @param categoryName the name of the category to delete.
    */
   void deleteByCategoryName(String categoryName);
+
+  /**
+   * Custom query to fetch all category names from the "category" table.
+   *
+   * @return a list of category names.
+   */
+  @Query("SELECT c.categoryName FROM CategoryEntity c")
+  List<String> findAllCategoryNames();
 }

@@ -1,5 +1,6 @@
 package com.ase.bytealchemists.controller;
 
+import com.ase.bytealchemists.model.CategoryEntity;
 import com.ase.bytealchemists.model.ServiceEntity;
 import com.ase.bytealchemists.service.CategoryService;
 import com.ase.bytealchemists.service.ServiceService;
