@@ -16,6 +16,7 @@ import com.ase.bytealchemists.model.ServiceEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -298,5 +299,67 @@ public class ServiceControllerTest {
     mockMvc.perform(delete("/services/{id}", serviceId))
             .andExpect(status().isNotFound());
   }
+
+  @Test
+  void testGetAllServices_ShouldReturnListOfServices() throws Exception {
+    ServiceEntity service1 = new ServiceEntity(
+        1L, "Shelter A", "shelters", 40.748817, -73.985428,
+        "123 Main St", "New York", "NY", "10001",
+        "123-456-7890", "9 AM - 5 PM", true);
+
+    ServiceEntity service2 = new ServiceEntity(
+        2L, "Shelter B", "shelters", 40.748817, -73.985428,
+        "456 Another St", "New York", "NY", "10002",
+        "987-654-3210", "10 AM - 6 PM", true);
+
+    List<ServiceEntity> services = Arrays.asList(service1, service2);
+
+    when(serviceService.getAllServices()).thenReturn(services);
+    mockMvc.perform(get("/services")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(2))
+        .andExpect(jsonPath("$[0].name").value("Shelter A"))
+        .andExpect(jsonPath("$[1].name").value("Shelter B"));
+  }
+
+  @Test
+  void testGetAllServices_EmptyList_ShouldReturn200() throws Exception {
+    when(serviceService.getAllServices()).thenReturn(Arrays.asList());
+
+    mockMvc.perform(get("/services")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()").value(0));
+  }
+
+  @Test
+  void testGetServiceById_ValidId_ShouldReturnService() throws Exception {
+    Long serviceId = 1L;
+    ServiceEntity service = new ServiceEntity(
+        serviceId, "Shelter A", "shelters", 40.748817, -73.985428,
+        "123 Main St", "New York", "NY", "10001",
+        "123-456-7890", "9 AM - 5 PM", true);
+
+    when(serviceService.getServiceById(serviceId)).thenReturn(Optional.of(service));
+
+    mockMvc.perform(get("/services/{id}", serviceId)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(serviceId))
+        .andExpect(jsonPath("$.name").value("Shelter A"))
+        .andExpect(jsonPath("$.category").value("shelters"));
+  }
+
+  @Test
+  void testGetServiceById_NonExistingId_ShouldReturn404() throws Exception {
+    Long serviceId = 999L;
+    when(serviceService.getServiceById(serviceId)).thenReturn(Optional.empty());
+
+    mockMvc.perform(get("/services/{id}", serviceId)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
+
 
 }
