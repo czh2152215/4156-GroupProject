@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Service class for managing operations related to services in the Homeless Support API.
+ * Service class for managing operations related to services in the Homeless
+ * Support API.
  *
  * @author Jason
  * @version 1.0
@@ -22,29 +23,33 @@ public class ServiceService {
    * Queries services based on latitude, longitude, category, and availability
    * within a fixed radius.
    *
-   * <p>This method uses a fixed radius of 10 km to find services within a certain location
-   * and applies additional filters such as service category and availability. It calls the
-   * repository layer to retrieve the results.</p>
+   * <p>
+   * This method uses a fixed radius of 10 km to find services within a certain
+   * location
+   * and applies additional filters such as service category and availability. It
+   * calls the
+   * repository layer to retrieve the results.
+   * </p>
    *
-   * @param latitude the latitude to filter services by location
-   * @param longitude the longitude to filter services by location
-   * @param category the category of services to filter (optional)
+   * @param latitude     the latitude to filter services by location
+   * @param longitude    the longitude to filter services by location
+   * @param category     the category of services to filter (optional)
    * @param availability the availability status to filter services (optional)
    * @return a list of {@link ServiceEntity} that match the given filters
    */
   public List<ServiceEntity> queryServices(Double latitude, Double longitude,
-                                           String category, Boolean availability) {
+      String category, Boolean availability) {
     double fixedRadius = 10.0;
     return serviceRepository.findByFilters(latitude, longitude,
         fixedRadius, category, availability);
   }
 
-
   /**
    * Deletes a service by its ID.
    *
    * @param id the ID of the service to delete
-   * @return true if the service was successfully deleted, false if the service was not found
+   * @return true if the service was successfully deleted, false if the service
+   *         was not found
    */
   public boolean deleteServiceById(Long id) {
     if (serviceRepository.existsById(id)) {
@@ -56,12 +61,14 @@ public class ServiceService {
   }
 
   /**
-   * Updates the service entity with the specified ID using the provided service data.
+   * Updates the service entity with the specified ID using the provided service
+   * data.
    * Only the non-null fields in the {@code service} object will be updated.
    *
    * @param id      the ID of the service to update
    * @param service the service data containing the fields to be updated
-   * @return the updated {@link ServiceEntity} if the service exists, otherwise {@code null}
+   * @return the updated {@link ServiceEntity} if the service exists, otherwise
+   *         {@code null}
    */
   public ServiceEntity updateService(Long id, ServiceEntity service) {
     Optional<ServiceEntity> optionalService = serviceRepository.findById(id);
@@ -109,7 +116,6 @@ public class ServiceService {
     }
   }
 
-
   /**
    * Registers a new service entity in the database.
    * This method saves the provided service entity to the database
@@ -138,7 +144,8 @@ public class ServiceService {
    * Retrieves a service by its id.
    *
    * @param id the id of the service to retrieve
-   * @return an Optional containing the service entity if found, or empty if not found
+   * @return an Optional containing the service entity if found, or empty if not
+   *         found
    */
   public Optional<ServiceEntity> getServiceById(Long id) {
     return serviceRepository.findById(id);

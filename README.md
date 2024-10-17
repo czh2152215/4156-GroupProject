@@ -10,14 +10,9 @@
 - [Installation](#installation)
 - [Usage](#usage)
   - [API Endpoints](#api-endpoints)
-- [Testing](#testing)
-  - [Unit Tests](#unit-tests)
-  - [API Tests](#api-tests)
 - [Style Checking and Documentation](#style-checking-and-documentation)
 - [Project Management](#project-management)
-- [Contributing](#contributing)
-- [License](#license)
-- [Repository Links](#repository-links)
+
 
 ## Introduction
 
@@ -109,13 +104,19 @@ Our API provides various endpoints to manage and access homeless support service
 - **Endpoint:** `GET /services/categories`
 - **Description:** Retrieves all available service categories.
 - **Response:**
-  - **Status Code:** `200 OK`
-  - **Body:** JSON array of `Category` objects.
+  - Status Code:
+    - `200 OK`
+    - `204 No Content`: If no categories are available.
+    - `500 Internal Server Error`: If an exception occurs during the operation.
+  - Body:
+    - 200 OK: A plain text string where the category names are joined by commas.
+    - 204 No Content: No body, indicating there are no categories available.
+    - 500 Internal Server Error: A plain text message like "An Error has occurred" in case of an exception.
 
 #### 3. **Add a New Category**
 
-- **Endpoint:** `POST /services/categories`
-- **Description:** Adds a new service category.
+- **Endpoint:** `POST /services/categories/name/{name}`
+- **Description:** Adds a new service category based on the category name.
 - **Request Body:**
   ```json
   {
@@ -123,8 +124,17 @@ Our API provides various endpoints to manage and access homeless support service
   }
   ```
 - **Response:**
-  - **Status Code:** `201 Created`
-  - **Body:** Success message.
+  - Status Code:
+    - `200 OK`
+    - `400 Bad Request`
+    - `409 Conflict`
+    - `500 Internal Server Error`
+  - Body:
+    - 200 OK: A success message indicating the category was updated successfully, e.g., "Attribute was updated successfully."
+    - 400 Bad Request: An error message like "Invalid category name."
+    - 409 Conflict: An error message like "Category already exists."
+    - 500 Internal Error: A plain text message like "An error has occurred" in case of an exception.
+
 
 #### 4. **Delete a Category**
 
@@ -229,48 +239,11 @@ Our API provides various endpoints to manage and access homeless support service
   - **Status Code:** `200 OK`
   - **Body:** JSON array of matching `ServiceEntity` objects.
 
-## Testing
 
-### Unit Tests
 
-We have implemented comprehensive unit tests for all major components of the `ServiceService` class using **JUnit 5** and **Mockito**. These tests cover scenarios including successful operations, partial and full updates, handling non-existing services, and exception handling.
 
-To run the unit tests:
 
-1. **Navigate to the Project Directory**
 
-   ```bash
-   cd Homeless-Support-API
-   ```
-
-2. **Execute the Tests**
-
-   ```bash
-   mvn test
-   ```
-
-   Alternatively, you can run the tests directly from your IDE.
-
-### API Tests
-
-API testing is performed using **Postman**. These tests ensure that all API endpoints function correctly, handle edge cases, and return appropriate status codes.
-
-#### Running API Tests with Postman
-
-1. **Import the Collection**
-
-   - Open Postman.
-   - Click on `Import` and select the provided `HomelessSupportAPI.postman_collection.json` file from the repository.
-
-2. **Execute the Tests**
-
-   - Select the `HomelessSupportAPI` collection.
-   - Click on `Run` to execute all the predefined requests.
-
-3. **Review the Results**
-
-   - Ensure all requests return the expected status codes and responses.
-   - Address any failed tests by debugging the API endpoints.
 
 ## Style Checking and Documentation
 
@@ -292,42 +265,13 @@ We utilize **Checkstyle** to enforce coding standards. Reports are included in t
 
 ## Project Management
 
-We use **Trello** for project management. The board includes all tasks, assignments, and progress tracking for team members.
+We use **Jira** for project management. The board includes all tasks, assignments, and progress tracking for team members.
 
-- **Trello Board Link:** [Byte Alchemists Trello](https://trello.com/invite/b/your-trello-board-link)
+- **Jira Board Link:** [Byte Alchemists Jira](https://columbia-team-skl5pnkl.atlassian.net/jira/software/projects/KAN/list)
 
-## Contributing
 
-We welcome contributions from all team members. To contribute:
 
-1. **Fork the Repository**
 
-   Click on the `Fork` button in the top right corner of the repository page.
-
-2. **Create a Feature Branch**
-
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-3. **Commit Your Changes**
-
-   ```bash
-   git commit -m "Add your descriptive commit message"
-   ```
-
-4. **Push to the Branch**
-
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-5. **Create a Pull Request**
-
-   - Navigate to your forked repository on GitHub.
-   - Click on `Compare & pull request`.
-   - Provide a descriptive title and comment for your pull request.
-   - Submit the pull request for review.
 
 ### Branch Protection Rules
 
@@ -336,15 +280,5 @@ Our `main` branch is protected with the following rules:
 - **Required Reviews:** At least one team member must review and approve the pull request.
 - **Commit Message Standards:** All commit messages must be meaningful and describe the changes made.
 
-## License
 
-This project is licensed under the [MIT License](LICENSE).
 
-## Repository Links
-
-- **Main Repository:** [Homeless Support API](https://github.com/byte-alchemists/Homeless-Support-API)
-- **Alternative Repository:** [Capybara](https://github.com/mm6234/Capybara)
-
-## Contact
-
-For any questions or support, please reach out to the team members or your project mentor.

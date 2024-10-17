@@ -1,15 +1,13 @@
 package com.ase.bytealchemists.service;
 
 import com.ase.bytealchemists.model.CategoryEntity;
-import com.ase.bytealchemists.model.ServiceEntity;
 import com.ase.bytealchemists.repository.CategoryRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.transaction.TransactionException;
 
 /**
  * Service class for managing operations related to service categories in the

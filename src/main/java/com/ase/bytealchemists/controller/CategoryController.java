@@ -56,6 +56,11 @@ public class CategoryController {
   }
 
   /**
+   * * End point for deleting a category by name.
+   * This method attempts to delete a category with the specified name.
+   * If the category is found and deleted successfully, a success message
+   * is returned. If the category does not exist, an error message is returned.
+   *
    * @param name the name of the category to be deleted.
    * @return a ResponseEntity with a message indicating the result of the
    *         operation.
