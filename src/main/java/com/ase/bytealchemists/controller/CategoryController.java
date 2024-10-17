@@ -56,31 +56,35 @@ public class CategoryController {
   }
 
   /**
-   * End point for deleting a category by name.
+   * * End point for deleting a category by name.
    * This method attempts to delete a category with the specified name.
    * If the category is found and deleted successfully, a success message
    * is returned. If the category does not exist, an error message is returned.
    *
    * @param name the name of the category to be deleted.
-   * @return a String message indicating the result of the operation.
-   *         If successful, returns a success message. If the category is
-   *         not found, returns an error message.
+   * @return a ResponseEntity with a message indicating the result of the
+   *         operation.
+   *         If successful, returns a success message with HTTP status 200 (OK).
+   *         If the category is not found, returns an error message with HTTP
+   *         status 404 (Not Found).
    */
   @DeleteMapping("/name/{name}")
-  public String deleteCategoryByName(@PathVariable String name) {
+  public ResponseEntity<String> deleteCategoryByName(@PathVariable String name) {
     try {
       categoryService.deleteCategoryByName(name);
-      return "Category with name '" + name + "' was deleted successfully.";
+      return ResponseEntity.ok("Category with name '" + name + "' was deleted successfully.");
     } catch (IllegalArgumentException e) {
-      return e.getMessage();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
   }
 
   /**
    * End point for retrieving all category names related to services.
    *
-   * @return A {@code ResponseEntity} object containing all the category names related to services
-   *         and an HTTP 200 response, or an appropriate message indicating the proper response.
+   * @return A {@code ResponseEntity} object containing all the category names
+   *         related to services
+   *         and an HTTP 200 response, or an appropriate message indicating the
+   *         proper response.
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getAllCategories() {
