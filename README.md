@@ -1,6 +1,6 @@
 # Homeless Support API
 
-![Project Banner](https://github.com/byte-alchemists/Homeless-Support-API/blob/main/banner.png)
+
 
 ## Table of Contents
 
@@ -40,7 +40,7 @@ Welcome to the **Homeless Support API** by **Byte Alchemists**. This API is desi
 Before you begin, ensure you have met the following requirements:
 
 - **Git**: Installed on your local machine. [Download Git](https://git-scm.com/downloads)
-- **Java JDK**: Version 11 or higher. [Download JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+- **Java JDK**: Version 17 or higher. [Download JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 - **Maven**: For building the project. [Install Maven](https://maven.apache.org/install.html)
 - **Postman**: For API testing. [Download Postman](https://www.postman.com/downloads/)
 - **IDE**: Such as IntelliJ IDEA or Eclipse for development.
@@ -52,8 +52,7 @@ Follow these steps to set up the project locally:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/byte-alchemists/Homeless-Support-API.git
-   cd Homeless-Support-API
+   git clone git@github.com:czh2152215/4156-GroupProject.git
    ```
 
 2. **Build the Project**
@@ -72,6 +71,25 @@ Follow these steps to set up the project locally:
 
    The API will be accessible at `http://localhost:8080`.
 
+
+4. **Style Check**
+
+   ```bash
+   mvn checkstyle:check 
+   mvn checkstyle:checkstyle
+   ```
+
+5. **Run Test and Generate Coverage Report**
+
+   ```bash
+   mvn clean test jacoco:report
+   ```
+
+5. **Run PMD**
+
+   ```bash
+   mvn pmd:pmd
+   ```
 ## Usage
 
 ### API Endpoints
@@ -110,16 +128,10 @@ Our API provides various endpoints to manage and access homeless support service
 
 #### 4. **Delete a Category**
 
-- **Endpoint:** `DELETE /services/categories`
+- **Endpoint:** `DELETE /services/categories/name/{name}`
 - **Description:** Deletes an existing service category.
-- **Request Body:**
-  ```json
-  {
-    "category_name": "shelters"
-  }
-  ```
 - **Response:**
-  - **Status Code:** `204 No Content`
+  - **Status Code:** `If successful, returns a success message with HTTP status 200 (OK), otherwise 404 Not Found`
 
 #### 5. **Register a New Service**
 
