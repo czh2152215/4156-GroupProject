@@ -11,10 +11,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig {
 
-/**
- * Creates a {@link WebMvcConfigurer} bean that defines global CORS settings.
- */
- @Bean
+  /**
+    * Creates a {@link WebMvcConfigurer} bean that defines global CORS settings.
+    */
+  @Bean
   public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
       @Override
