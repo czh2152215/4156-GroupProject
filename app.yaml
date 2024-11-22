@@ -1,0 +1,5 @@
+entrypoint: java -jar target/byteAlchemists-0.0.1-SNAPSHOT.jar
+runtime: java17
+instance_class: F1
+beta_settings:
+  cloud_sql_instances: bytealchemists:us-central1:my-mysql-instance
