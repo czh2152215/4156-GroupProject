@@ -54,10 +54,5 @@ public class UserEntity {
       message = "Phone number must be 10-15 digits, optionally starting with +")
   private String phone;
 
-  @Column(name = "reset_token", unique = true)
-  private String resetToken;
-
-  @Column(name = "reset_token_expiry")
-  private LocalDateTime resetTokenExpiry;
 }
 
