@@ -5,7 +5,10 @@ import com.ase.bytealchemists.service.FeedbackService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,5 +48,30 @@ public class FeedbackController {
     }
   }
 
-}
+  /**
+   * End point for deleting a feedback by id.
+   * This method attempts to delete a feedback by the specified id.
+   *
+   * @param id the ID of the feedback to be deleted.
+   * @return A {@code ResponseEntity} object containing an HTTP 200 response
+   *         with an appropriate message or the proper status code in tune
+   *         with what has happened.
+   */
+  @DeleteMapping(value = "/feedback/{feedback_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> deleteFeedbackById(@PathVariable("feedback_id") int id) {
+    try {
+      if (feedbackService.deleteFeedbackById(id)) {
+        return new ResponseEntity<>("Feedback was deleted successfully.", HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>("This feedback does not exist.", HttpStatus.NOT_FOUND);
+      }
+    } catch (Exception e) {
+      return handleException(e);
+    }
+  }
 
+  public ResponseEntity<?> handleException(Exception e) {
+    System.out.println(e.toString());
+    return new ResponseEntity<>("An Error has occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}

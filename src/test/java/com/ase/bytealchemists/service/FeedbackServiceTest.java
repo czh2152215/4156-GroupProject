@@ -5,12 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.ase.bytealchemists.model.CategoryEntity;
 import com.ase.bytealchemists.model.FeedbackEntity;
 import com.ase.bytealchemists.repository.FeedbackRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -60,6 +63,40 @@ public class FeedbackServiceTest {
     assertEquals("Great service!", result.getComment(), "Comment should match");
 
     verify(feedbackRepository, times(1)).save(feedback);
+  }
+
+  /**
+   * Test deleteFeedbackById() method when feedback is deleted successfully.
+   */
+  @Test
+  public void testDeleteFeedbackByIdWhenSuccess() {
+    FeedbackEntity feedbackEntity = new FeedbackEntity(1L, 1L, 101L, 5,
+                                              "Great service!");
+
+    when(feedbackRepository.findById(1L)).thenReturn(Optional.of(feedbackEntity));
+    doNothing().when(feedbackRepository).deleteById(1L);
+
+    boolean result = feedbackService.deleteFeedbackById(1);
+
+    // Assert
+    verify(feedbackRepository, times(1)).findById(1L);
+    verify(feedbackRepository, times(1)).deleteById(1L);
+    assertTrue(result, "The feedback should be successfully deleted");
+  }
+
+  /**
+   * Test deleteFeedbackById() method when feedback does not existt.
+   */
+  @Test
+  public void testDeleteFeedbackByIdWhenFail() {
+    when(feedbackRepository.findById(1L)).thenReturn(Optional.empty());
+
+    boolean result = feedbackService.deleteFeedbackById(1);
+
+    // Assert
+    verify(feedbackRepository, times(1)).findById(1L);
+    verify(feedbackRepository, times(0)).deleteById(1L);
+    assertFalse(result, "The method should return false when feedback does not exist");
   }
 }
 
