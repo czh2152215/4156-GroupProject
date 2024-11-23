@@ -40,21 +40,3 @@ public class SecurityConfig {
   }
 }
 
-  /**
-   * Configures the Security Filter Chain to allow unrestricted access to all endpoints.
-   *
-   * @param http the HttpSecurity object
-   * @return the SecurityFilterChain
-   * @throws Exception if configuration fails
-   */
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-            .csrf().disable() // Disable CSRF (safe for development, reconsider for production)
-            .authorizeRequests()
-            .anyRequest().permitAll(); // Allow all requests without authentication
-
-    return http.build();
-  }
-}
-
