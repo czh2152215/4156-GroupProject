@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -89,6 +90,43 @@ public class UserController {
               HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  @PostMapping("/forgotPassword")
+  public ResponseEntity<?> forgotPassword(@RequestParam String username) {
+    try {
+      // Generate a reset token (simulate sending via email/SMS)
+      String resetToken = userService.generateResetToken(username);
+
+      // Return the token in the response for demonstration purposes
+      return ResponseEntity.ok("Reset token (simulated): " + resetToken);
+    } catch (Exception ex) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body("Error generating reset token: " + ex.getMessage());
+    }
+  }
+
+  @PostMapping("/resetPassword")
+  public ResponseEntity<?> resetPassword(
+      @RequestParam String username,
+      @RequestParam String resetToken,
+      @RequestParam String newPassword) {
+    try {
+      // Reset the password using the provided token
+      userService.resetPasswordWithToken(username, resetToken, newPassword);
+      return ResponseEntity.ok("Password reset successfully (simulated).");
+    } catch (IllegalArgumentException ex) {
+      if (ex.getMessage().equals("Reset token has expired")) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body("Reset token is expired. Please request a new token.");
+      }
+      throw ex;
+    } catch (Exception ex) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error resetting password: " + ex.getMessage());
+    }
+  }
+
+
 
 
 
