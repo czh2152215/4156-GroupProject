@@ -1,6 +1,7 @@
 package com.ase.bytealchemists.service;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -259,5 +260,93 @@ public class UserControllerTest {
     verify(userService, times(0)).findUserByUsername(any(String.class));
     verify(userService, times(0)).verifyPassword(any(String.class), any(String.class));
   }
+
+  /**
+   * Tests the successful generation of a reset token for password reset.
+   */
+  @Test
+  public void testForgotPasswordSuccess() throws Exception {
+    // Mocking userService to generate a reset token
+    when(userService.generateResetToken("johndoe")).thenReturn("reset-token-12345");
+
+    // Perform POST request
+    mockMvc.perform(post("/user/forgotPassword")
+            .param("username", "johndoe"))
+        .andExpect(status().isOk())
+        .andExpect(content().string("Reset token (simulated): reset-token-12345"));
+
+    verify(userService, times(1)).generateResetToken("johndoe");
+  }
+
+  /**
+   * Tests forgot password when the username does not exist.
+   */
+  @Test
+  public void testForgotPasswordUserNotFound() throws Exception {
+    // Mocking userService to throw an exception for non-existent username
+    when(userService.generateResetToken("unknownuser"))
+        .thenThrow(new IllegalArgumentException("User not found"));
+
+    // Perform POST request
+    mockMvc.perform(post("/user/forgotPassword")
+            .param("username", "unknownuser"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string("Error generating reset token: User not found"));
+
+    verify(userService, times(1)).generateResetToken("unknownuser");
+  }
+
+  /**
+   * Tests reset password successfully with a valid token.
+   */
+  @Test
+  public void testResetPasswordSuccess() throws Exception {
+    // Mocking userService to perform password reset without exceptions
+    mockMvc.perform(post("/user/resetPassword")
+            .param("username", "johndoe")
+            .param("resetToken", "valid-token-12345")
+            .param("newPassword", "NewPassword@123"))
+        .andExpect(status().isOk())
+        .andExpect(content().string("Password reset successfully (simulated)."));
+
+    verify(userService, times(1)).resetPasswordWithToken("johndoe", "valid-token-12345", "NewPassword@123");
+  }
+
+  /**
+   * Tests reset password when the reset token has expired.
+   */
+  @Test
+  public void testResetPasswordExpiredToken() throws Exception {
+    // Mocking userService to throw an exception for expired token
+    doThrow(new IllegalArgumentException("Reset token has expired"))
+        .when(userService).resetPasswordWithToken("johndoe", "expired-token", "NewPassword@123");
+
+    mockMvc.perform(post("/user/resetPassword")
+            .param("username", "johndoe")
+            .param("resetToken", "expired-token")
+            .param("newPassword", "NewPassword@123"))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string("Error resetting password: Reset token has expired"));
+
+    verify(userService, times(1)).resetPasswordWithToken("johndoe", "expired-token", "NewPassword@123");
+  }
+
+  /**
+   * Tests reset password with invalid input.
+   */
+  @Test
+  public void testResetPasswordInvalidInput() throws Exception {
+    mockMvc.perform(post("/user/resetPassword")
+            .param("username", "")
+            .param("resetToken", "valid-token")
+            .param("newPassword", "NewPassword@123"))
+        .andExpect(status().isBadRequest());
+
+    verify(userService, times(0)).resetPasswordWithToken(any(String.class), any(String.class),
+        any(String.class));
+  }
+
+
+
 
 }

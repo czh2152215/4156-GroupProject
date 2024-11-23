@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -52,5 +53,11 @@ public class UserEntity {
   @Pattern(regexp = "\\+?[0-9]{10,15}",
       message = "Phone number must be 10-15 digits, optionally starting with +")
   private String phone;
+
+  @Column(name = "reset_token", unique = true)
+  private String resetToken;
+
+  @Column(name = "reset_token_expiry")
+  private LocalDateTime resetTokenExpiry;
 }
 
