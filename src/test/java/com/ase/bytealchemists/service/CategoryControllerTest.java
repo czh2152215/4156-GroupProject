@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ase.bytealchemists.config.TestSecurityConfig;
 import com.ase.bytealchemists.controller.CategoryController;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,12 +17,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * This class contains the unit tests for the CategoryController class.
  */
+@Import(TestSecurityConfig.class)
+
 @WebMvcTest(CategoryController.class)
 public class CategoryControllerTest {
 

@@ -3,6 +3,7 @@ package com.ase.bytealchemists.controller;
 import com.ase.bytealchemists.model.UserEntity;
 import com.ase.bytealchemists.service.UserService;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * Class UserController.
@@ -43,5 +45,53 @@ public class UserController {
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  /**
+   * Endpoint for user login.
+   *
+   * <p>This method handles POST requests to "/user/login" and attempts to authenticate the user
+   * using the provided username and password. It manually validates the required fields
+   * and returns appropriate HTTP responses based on the authentication result.
+   *
+   * @param loginRequest The user login details containing username and password.
+   * @return A {@code ResponseEntity} indicating the result of the login attempt.
+   */
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody UserEntity loginRequest) {
+    // Manually validate required fields
+    if (loginRequest.getUsername() == null || loginRequest.getUsername().isBlank()) {
+      return ResponseEntity.badRequest().body("Username cannot be blank");
+    }
+    if (loginRequest.getPassword() == null || loginRequest.getPassword().isBlank()) {
+      return ResponseEntity.badRequest().body("Password cannot be blank");
+    }
+
+    try {
+      // Check if the user exists
+      Optional<UserEntity> userOptional = userService
+              .findUserByUsername(loginRequest.getUsername());
+      if (userOptional.isPresent()) {
+        UserEntity user = userOptional.get();
+
+        // Verify password
+        boolean passwordMatches = userService.verifyPassword(loginRequest.getPassword(),
+                user.getPassword());
+        if (passwordMatches) {
+          return ResponseEntity.ok("Login successful");
+        } else {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+      } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+      }
+    } catch (Exception e) {
+      return new ResponseEntity<>("An error occurred during login",
+              HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
+
 }
+
 

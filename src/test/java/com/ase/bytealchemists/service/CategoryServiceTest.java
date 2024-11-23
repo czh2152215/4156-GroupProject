@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.ase.bytealchemists.config.TestSecurityConfig;
 import com.ase.bytealchemists.model.CategoryEntity;
 import com.ase.bytealchemists.repository.CategoryRepository;
 import java.util.Arrays;
@@ -19,10 +20,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.annotation.Import;
+
 
 /**
  * This class contains the unit tests for the CategoryService class.
  */
+@Import(TestSecurityConfig.class)
 public class CategoryServiceTest {
 
   @Mock
