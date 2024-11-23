@@ -13,6 +13,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.ase.bytealchemists.config.TestSecurityConfig;
 import com.ase.bytealchemists.model.ServiceEntity;
 import com.ase.bytealchemists.repository.ServiceRepository;
 import java.util.ArrayList;
@@ -23,11 +24,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
+
 
 /**
  * This class contains the unit tests for the ServiceService class.
  */
+@Import(TestSecurityConfig.class)
+
 public class ServiceServiceTest {
 
   @Mock

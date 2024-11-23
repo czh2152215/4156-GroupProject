@@ -1,5 +1,6 @@
 package com.ase.bytealchemists.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.ase.bytealchemists.config.TestSecurityConfig;
 import com.ase.bytealchemists.model.UserEntity;
 import com.ase.bytealchemists.repository.UserRepository;
 import java.util.Optional;
@@ -15,11 +17,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 /**
  * Unit tests for UserService.
  */
+@Import(TestSecurityConfig.class)
+
 public class UserServiceTest {
 
   @Mock
@@ -63,4 +69,72 @@ public class UserServiceTest {
     verify(passwordEncoder, times(1)).encode("securepassword");
     verify(userRepository, times(1)).save(any(UserEntity.class));
   }
+
+  /**
+   * Tests the scenario where the password verification matches.
+   */
+  @Test
+  public void testVerifyPassword_Match() {
+    // Mock passwordEncoder.matches() method
+    when(passwordEncoder.matches("rawPassword", "encodedPassword")).thenReturn(true);
+
+    // Execute test
+    boolean result = userService.verifyPassword("rawPassword", "encodedPassword");
+
+    // Verify result
+    assertTrue(result, "Password should match.");
+    verify(passwordEncoder, times(1)).matches("rawPassword", "encodedPassword");
+  }
+
+  /**
+   * Tests the scenario where the password verification does not match.
+   */
+  @Test
+  public void testVerifyPassword_NotMatch() {
+    // Mock passwordEncoder.matches() method
+    when(passwordEncoder.matches("rawPassword", "encodedPassword")).thenReturn(false);
+
+    // Execute test
+    boolean result = userService.verifyPassword("rawPassword", "encodedPassword");
+
+    // Verify result
+    assertFalse(result, "Password should not match.");
+    verify(passwordEncoder, times(1)).matches("rawPassword", "encodedPassword");
+  }
+
+  /**
+   * Tests successfully finding a user by username.
+   */
+  @Test
+  public void testFindUserByUsername_Success() {
+    // Prepare data
+    UserEntity mockUser = new UserEntity();
+    mockUser.setUsername("johndoe");
+
+    when(userRepository.findByUsername("johndoe")).thenReturn(Optional.of(mockUser));
+
+    // Execute test
+    Optional<UserEntity> result = userService.findUserByUsername("johndoe");
+
+    // Verify result
+    assertTrue(result.isPresent(), "User should be found.");
+    assertEquals("johndoe", result.get().getUsername());
+    verify(userRepository, times(1)).findByUsername("johndoe");
+  }
+
+  /**
+   * Tests the scenario where finding a user by username fails (user not found).
+   */
+  @Test
+  public void testFindUserByUsername_NotFound() {
+    when(userRepository.findByUsername("unknownuser")).thenReturn(Optional.empty());
+
+    // Execute test
+    Optional<UserEntity> result = userService.findUserByUsername("unknownuser");
+
+    // Verify result
+    assertFalse(result.isPresent(), "User should not be found.");
+    verify(userRepository, times(1)).findByUsername("unknownuser");
+  }
+
 }

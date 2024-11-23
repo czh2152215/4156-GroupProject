@@ -43,5 +43,27 @@ public class UserService {
     return true; // Success
   }
   // Class body here
+
+  /**
+   * Verifies that the provided password matches the encoded password of the user.
+   *
+   * @param rawPassword the plain text password provided by the user during login
+   * @param encodedPassword the encoded password stored in the database
+   * @return true if the passwords match, false otherwise
+   */
+  public boolean verifyPassword(String rawPassword, String encodedPassword) {
+    return passwordEncoder.matches(rawPassword, encodedPassword);
+  }
+
+  /**
+   * Finds a user by their username.
+   *
+   * @param username the username to find
+   * @return an {@link Optional} containing the {@link UserEntity} if found
+   */
+  public Optional<UserEntity> findUserByUsername(String username) {
+    return userRepository.findByUsername(username);
+  }
+
 }
 
