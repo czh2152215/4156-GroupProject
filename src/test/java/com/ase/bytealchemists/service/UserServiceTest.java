@@ -139,121 +139,64 @@ public class UserServiceTest {
     verify(userRepository, times(1)).findByUsername("unknownuser");
   }
 
+  /**
+   * Tests successfully resetting a user's password.
+   */
   @Test
-  public void testGenerateResetToken_Success() {
+  public void testResetPassword_Success() {
     UserEntity mockUser = new UserEntity();
     mockUser.setUsername("johndoe");
-    mockUser.setEmail("johndoe@example.com");
-    mockUser.setResetToken(null);
+    mockUser.setPassword("oldpassword");
 
     when(userRepository.findByUsername("johndoe")).thenReturn(Optional.of(mockUser));
-    when(userRepository.save(any(UserEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(passwordEncoder.encode("newSecurePassword")).thenReturn("encodedNewPassword");
 
-    String resetToken = userService.generateResetToken("johndoe");
+    userService.resetPassword("johndoe", "newSecurePassword");
 
-    assertTrue(resetToken.length() > 0, "Reset token should be generated.");
-    assertEquals(resetToken, mockUser.getResetToken(), "Reset token should be saved in user entity.");
     verify(userRepository, times(1)).findByUsername("johndoe");
-    verify(userRepository, times(1)).save(any(UserEntity.class));
+    verify(passwordEncoder, times(1)).encode("newSecurePassword");
+    verify(userRepository, times(1)).save(mockUser);
+    assertEquals("encodedNewPassword", mockUser.getPassword(), "Password should be updated.");
   }
 
+  /**
+   * Tests resetting a user's password when the user is not found.
+   */
   @Test
-  public void testGenerateResetToken_UserNotFound() {
+  public void testResetPassword_UserNotFound() {
     when(userRepository.findByUsername("unknownuser")).thenReturn(Optional.empty());
 
-    IllegalArgumentException exception = org.junit.jupiter.api.Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () -> userService.generateResetToken("unknownuser"),
-        "Expected generateResetToken to throw, but it didn't."
-    );
+    try {
+      userService.resetPassword("unknownuser", "newSecurePassword");
+    } catch (IllegalArgumentException ex) {
+      assertEquals("User not found", ex.getMessage(), "Exception message should "
+          + "indicate user not found.");
+    }
 
-    assertEquals("User not found", exception.getMessage());
     verify(userRepository, times(1)).findByUsername("unknownuser");
+    verify(passwordEncoder, times(0)).encode(any(String.class));
+    verify(userRepository, times(0)).save(any(UserEntity.class));
   }
 
+  /**
+   * Tests verifying a password with null input.
+   */
   @Test
-  public void testResetPasswordWithToken_Success() {
-    UserEntity mockUser = new UserEntity();
-    mockUser.setUsername("johndoe");
-    mockUser.setPassword("oldPassword");
-    mockUser.setResetToken("valid-token");
-    mockUser.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
+  public void testVerifyPassword_NullInput() {
+    boolean result = userService.verifyPassword(null, null);
 
-    when(userRepository.findByUsername("johndoe")).thenReturn(Optional.of(mockUser));
-    when(passwordEncoder.encode("NewPassword@123")).thenReturn("encodedNewPassword");
-    when(userRepository.save(any(UserEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-    userService.resetPasswordWithToken("johndoe", "valid-token", "NewPassword@123");
-
-    assertEquals("encodedNewPassword", mockUser.getPassword(), "Password should be updated.");
-    assertNull(mockUser.getResetToken(), "Reset token should be cleared.");
-    assertNull(mockUser.getResetTokenExpiry(), "Reset token expiry should be cleared.");
-    verify(userRepository, times(1)).findByUsername("johndoe");
-    verify(passwordEncoder, times(1)).encode("NewPassword@123");
-    verify(userRepository, times(1)).save(mockUser);
+    assertFalse(result, "Password verification should fail for null input.");
+    verify(passwordEncoder, times(0)).matches(any(String.class), any(String.class));
   }
 
+  /**
+   * Tests finding a user by username with null input.
+   */
   @Test
-  public void testResetPasswordWithToken_InvalidToken() {
-    UserEntity mockUser = new UserEntity();
-    mockUser.setUsername("johndoe");
-    mockUser.setResetToken("valid-token");
+  public void testFindUserByUsername_NullUsername() {
+    Optional<UserEntity> result = userService.findUserByUsername(null);
 
-    when(userRepository.findByUsername("johndoe")).thenReturn(Optional.of(mockUser));
-
-    IllegalArgumentException exception = org.junit.jupiter.api.Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () -> userService.resetPasswordWithToken("johndoe", "invalid-token", "NewPassword@123"),
-        "Expected resetPasswordWithToken to throw, but it didn't."
-    );
-
-    assertEquals("Invalid reset token", exception.getMessage());
-    verify(userRepository, times(1)).findByUsername("johndoe");
+    assertFalse(result.isPresent(), "No user should be found for null username.");
+    verify(userRepository, times(1)).findByUsername(null);
   }
-
-  @Test
-  public void testResetPasswordWithToken_ExpiredToken() {
-    UserEntity mockUser = new UserEntity();
-    mockUser.setUsername("johndoe");
-    mockUser.setResetToken("valid-token");
-    mockUser.setResetTokenExpiry(LocalDateTime.now().minusMinutes(1)); // Token expired
-
-    when(userRepository.findByUsername("johndoe")).thenReturn(Optional.of(mockUser));
-
-    IllegalArgumentException exception = org.junit.jupiter.api.Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () -> userService.resetPasswordWithToken("johndoe", "valid-token", "NewPassword@123"),
-        "Expected resetPasswordWithToken to throw, but it didn't."
-    );
-
-    assertEquals("Reset token has expired", exception.getMessage());
-    verify(userRepository, times(1)).findByUsername("johndoe");
-  }
-
-  @Test
-  public void testResetPasswordWithToken_InvalidPassword() {
-    UserEntity mockUser = new UserEntity();
-    mockUser.setUsername("johndoe");
-    mockUser.setResetToken("valid-token");
-    mockUser.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
-
-    when(userRepository.findByUsername("johndoe")).thenReturn(Optional.of(mockUser));
-
-    IllegalArgumentException exception = org.junit.jupiter.api.Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () -> userService.resetPasswordWithToken("johndoe", "valid-token", "short"),
-        "Expected resetPasswordWithToken to throw, but it didn't."
-    );
-
-    assertEquals("Password must be at least 8 characters long", exception.getMessage());
-    verify(userRepository, times(1)).findByUsername("johndoe");
-  }
-
-
-
-
-
-
-
-
 }
