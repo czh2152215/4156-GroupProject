@@ -273,11 +273,11 @@ public class UserControllerTest {
 
     mockMvc.perform(post("/user/resetPassword")
             .param("username", "johndoe")
-            .param("newPassword", "NewPassword@123"))
+            .param("newPassword", "NewPassword@456"))
         .andExpect(status().isOk())
         .andExpect(content().string("Password updated successfully."));
 
-    verify(userService, times(1)).resetPassword("johndoe", "NewPassword@123");
+    verify(userService, times(1)).resetPassword("johndoe", "NewPassword@456");
   }
 
   /**

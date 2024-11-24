@@ -105,6 +105,13 @@ public class UserController {
   public ResponseEntity<?> resetPassword(
       @RequestParam String username,
       @RequestParam String newPassword) {
+    if (username.isBlank()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username cannot be blank");
+    }
+    if (newPassword.isBlank()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be blank");
+    }
+
     try {
       // Reset the password
       userService.resetPassword(username, newPassword);
