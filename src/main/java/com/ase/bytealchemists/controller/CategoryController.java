@@ -71,12 +71,18 @@ public class CategoryController {
   @DeleteMapping("/name/{name}")
   public ResponseEntity<String> deleteCategoryByName(@PathVariable String name) {
     try {
+      if (!categoryService.categoryExists(name)) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("Category with name '" + name + "' does not exist.");
+      }
       categoryService.deleteCategoryByName(name);
       return ResponseEntity.ok("Category with name '" + name + "' was deleted successfully.");
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("An error occurred while deleting the category.");
     }
   }
+
 
   /**
    * End point for retrieving all category names related to services.
