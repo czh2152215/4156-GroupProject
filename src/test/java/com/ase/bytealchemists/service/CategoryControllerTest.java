@@ -3,6 +3,7 @@ package com.ase.bytealchemists.service;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -65,7 +66,7 @@ public class CategoryControllerTest {
   @Test
   public void testGetAllCategoriesWhenExceptionExists() throws Exception {
     when(categoryService.getAllCategories())
-                                      .thenThrow(new RuntimeException("Database connection error"));
+        .thenThrow(new RuntimeException("Database connection error"));
 
     mockMvc.perform(get("/services/categories")
             .contentType(MediaType.APPLICATION_JSON))
@@ -137,5 +138,53 @@ public class CategoryControllerTest {
 
     verify(categoryService, times(1)).addCategoryByName("Shelter");
   }
-}
 
+  // Test for deleteCategoryByName() method when success
+  @Test
+  public void testDeleteCategoryByNameWhenSuccess() throws Exception {
+    String categoryName = "Shelter";
+
+    when(categoryService.categoryExists("Shelter")).thenReturn(true);
+
+    mockMvc.perform(delete("/services/categories/name/{name}", categoryName)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().string("Category with name 'Shelter' was deleted successfully."));
+
+    // Verify service interaction
+    verify(categoryService, times(1)).deleteCategoryByName(categoryName);
+  }
+
+  // Test for deleteCategoryByName() method when category does not exist
+  @Test
+  public void testDeleteCategoryByNameWhenFail() throws Exception {
+    String categoryName = "Shelter";
+
+    when(categoryService.categoryExists("Shelter")).thenReturn(false);
+
+    mockMvc.perform(delete("/services/categories/name/{name}", categoryName)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string("Category with name 'Shelter' does not exist."));
+
+    // Verify service interaction
+    verify(categoryService, times(0)).deleteCategoryByName(categoryName);
+  }
+
+  // Test for deleteCategoryByName() method when there is exception
+  @Test
+  public void testDeleteCategoryByNameWhenExceptionExists() throws Exception {
+    String categoryName = "Shelter";
+
+    when(categoryService.categoryExists("Shelter"))
+        .thenThrow(new RuntimeException("Database connection error"));
+
+    mockMvc.perform(delete("/services/categories/name/{name}", categoryName)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string("An error occurred while deleting the category."));
+
+    // Verify service interaction
+    verify(categoryService, times(0)).deleteCategoryByName(categoryName);
+  }
+}

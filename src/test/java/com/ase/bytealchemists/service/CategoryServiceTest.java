@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,6 +17,7 @@ import com.ase.bytealchemists.repository.CategoryRepository;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -90,5 +93,34 @@ public class CategoryServiceTest {
     assertFalse(addResult);
     verify(categoryRepository, times(1)).existsByCategoryName("Shelter");
     verify(categoryRepository, times(0)).save(any(CategoryEntity.class));
+  }
+
+  // Test for deleteCategoryByName() method when category is deleted successfully
+  @Test
+  void testDeleteCategoryByNameWhenCategoryExists() {
+    String categoryName = "Shelter";
+    CategoryEntity mockCategory = new CategoryEntity();
+    mockCategory.setCategoryName(categoryName);
+
+    when(categoryRepository.findByCategoryName(categoryName)).thenReturn(Optional.of(mockCategory));
+    doNothing().when(categoryRepository).delete(mockCategory);
+
+    categoryService.deleteCategoryByName(categoryName);
+
+    verify(categoryRepository, times(1)).findByCategoryName(categoryName);
+    verify(categoryRepository, times(1)).delete(mockCategory);
+  }
+
+  // Test for deleteCategoryByName() method when category exists
+  @Test
+  void testDeleteCategoryByNameWhenCategoryDoesNotExist() {
+    String categoryName = "Shelter";
+
+    when(categoryRepository.findByCategoryName(categoryName)).thenReturn(Optional.empty());
+
+    categoryService.deleteCategoryByName(categoryName);
+
+    verify(categoryRepository, times(1)).findByCategoryName(categoryName);
+    verify(categoryRepository, never()).delete(any(CategoryEntity.class));
   }
 }
