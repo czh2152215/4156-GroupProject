@@ -3,6 +3,8 @@ package com.ase.bytealchemists.controller;
 import com.ase.bytealchemists.model.UserEntity;
 import com.ase.bytealchemists.service.UserService;
 import jakarta.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,7 +61,6 @@ public class UserController {
    */
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody UserEntity loginRequest) {
-    // Manually validate required fields
     if (loginRequest.getUsername() == null || loginRequest.getUsername().isBlank()) {
       return ResponseEntity.badRequest().body("Username cannot be blank");
     }
@@ -68,17 +69,21 @@ public class UserController {
     }
 
     try {
-      // Check if the user exists
+      // check exists
       Optional<UserEntity> userOptional = userService
               .findUserByUsername(loginRequest.getUsername());
       if (userOptional.isPresent()) {
         UserEntity user = userOptional.get();
 
-        // Verify password
+        // password
         boolean passwordMatches = userService.verifyPassword(loginRequest.getPassword(),
                 user.getPassword());
         if (passwordMatches) {
-          return ResponseEntity.ok("Login successful");
+          // map struct
+          Map<String, Object> response = new HashMap<>();
+          response.put("userId", user.getId());
+          response.put("message", "Login successful");
+          return ResponseEntity.ok(response);
         } else {
           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }

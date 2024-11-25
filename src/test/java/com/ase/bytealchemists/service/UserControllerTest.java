@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ase.bytealchemists.config.TestSecurityConfig;
@@ -150,18 +151,17 @@ public class UserControllerTest {
    */
   @Test
   public void testLoginSuccess() throws Exception {
-    // Create a mock UserEntity object
     UserEntity mockUser = new UserEntity();
+    mockUser.setId(1L);
     mockUser.setUsername("johndoe");
-    mockUser.setPassword("encryptedpassword"); // Assuming this is the encrypted password
+    mockUser.setPassword("encryptedpassword");
 
-    // Mock userService.findUserByUsername() method
+    // Mock userService.findUserByUsername()
     when(userService.findUserByUsername("johndoe")).thenReturn(Optional.of(mockUser));
 
-    // Mock userService.verifyPassword() method
+    // Mock userService.verifyPassword()
     when(userService.verifyPassword("securepassword", "encryptedpassword")).thenReturn(true);
 
-    // Execute POST request
     mockMvc.perform(post("/user/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("""
@@ -171,9 +171,9 @@ public class UserControllerTest {
                         }
                         """))
             .andExpect(status().isOk())
-            .andExpect(content().string("Login successful"));
+            .andExpect(jsonPath("$.userId").value(1))
+            .andExpect(jsonPath("$.message").value("Login successful"));
 
-    // Verify method invocation counts
     verify(userService, times(1)).findUserByUsername("johndoe");
     verify(userService, times(1)).verifyPassword("securepassword", "encryptedpassword");
   }
