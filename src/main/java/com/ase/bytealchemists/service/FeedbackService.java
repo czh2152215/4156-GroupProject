@@ -52,4 +52,14 @@ public class FeedbackService {
       return false;
     }
   }
+
+  /**
+   * Retrieves a feedback entry by its ID.
+   *
+   * @param id The ID of the feedback to retrieve.
+   * @return The {@link FeedbackEntity} if found.
+   */
+  public Optional<FeedbackEntity> getFeedbackById(Long id) {
+    return feedbackRepository.findById(id);
+  }
 }

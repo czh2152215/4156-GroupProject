@@ -3,16 +3,19 @@ package com.ase.bytealchemists.controller;
 import com.ase.bytealchemists.model.FeedbackEntity;
 import com.ase.bytealchemists.service.FeedbackService;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * Controller for managing feedback-related API endpoints.
@@ -69,6 +72,35 @@ public class FeedbackController {
       return handleException(e);
     }
   }
+
+  /**
+   * Endpoint to retrieve a single feedback by its ID.
+   *
+   * @param feedbackId The ID of the feedback to retrieve.
+   * @return If found, returns the feedback entity and HTTP status 200 (OK);
+   *         If not found, returns HTTP status 404 (Not Found) and an error message;
+   *         In case of other exceptions, returns HTTP status 500 (Internal Server Error).
+   */
+  @GetMapping("/feedback/{feedbackId}")
+  public ResponseEntity<?> getFeedbackById(@PathVariable("feedbackId") Long feedbackId) {
+    try {
+      // Retrieve feedback using the service layer
+      Optional<FeedbackEntity> feedbackOptional = feedbackService.getFeedbackById(feedbackId);
+
+      if (feedbackOptional.isPresent()) {
+        // If feedback exists, return the feedback and HTTP status 200
+        return new ResponseEntity<>(feedbackOptional.get(), HttpStatus.OK);
+      } else {
+        // If feedback does not exist, return HTTP status 404 and an error message
+        return new ResponseEntity<>("Feedback with ID "
+                + feedbackId + " not found.", HttpStatus.NOT_FOUND);
+      }
+    } catch (Exception e) {
+      // Handle other exceptions
+      return handleException(e);
+    }
+  }
+
 
   public ResponseEntity<?> handleException(Exception e) {
     System.out.println(e.toString());
