@@ -1,6 +1,7 @@
 package com.ase.bytealchemists.service;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -135,6 +137,70 @@ public class FeedbackControllerTest {
         .andExpect(content().string("An Error has occurred."));
 
     verify(feedbackService, times(1)).deleteFeedbackById(1);
+  }
+
+  /**
+   * Tests successfully retrieving a feedback by its ID.
+   */
+  @Test
+  public void testGetFeedbackById_Success() throws Exception {
+    // Arrange
+    FeedbackEntity mockFeedback = new FeedbackEntity();
+    mockFeedback.setId(1L);
+    mockFeedback.setUserId(1L);
+    mockFeedback.setServiceId(101L);
+    mockFeedback.setRating(5);
+    mockFeedback.setComment("Excellent service!");
+
+    when(feedbackService.getFeedbackById(1L)).thenReturn(Optional.of(mockFeedback));
+
+    // Act & Assert
+    mockMvc.perform(get("/services/feedback/{feedbackId}", 1L)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(1))
+            .andExpect(jsonPath("$.userId").value(1))
+            .andExpect(jsonPath("$.serviceId").value(101))
+            .andExpect(jsonPath("$.rating").value(5))
+            .andExpect(jsonPath("$.comment").value("Excellent service!"));
+
+    verify(feedbackService, times(1)).getFeedbackById(1L);
+  }
+
+  /**
+   * Tests retrieving a feedback by ID when the feedback does not exist.
+   */
+  @Test
+  public void testGetFeedbackById_NotFound() throws Exception {
+    // Arrange
+    when(feedbackService.getFeedbackById(999L)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    mockMvc.perform(get("/services/feedback/{feedbackId}", 999L)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(content().string("Feedback with ID 999 not found."));
+
+    verify(feedbackService, times(1)).getFeedbackById(999L);
+  }
+
+  /**
+   * Tests retrieving a feedback by ID when an internal server error occurs.
+   */
+  @Test
+  public void testGetFeedbackById_InternalServerError() throws Exception {
+    // Arrange
+    when(feedbackService.getFeedbackById(anyLong()))
+            .thenThrow(new RuntimeException("Database error"));
+
+    // Act & Assert
+    mockMvc.perform(get("/services/feedback/{feedbackId}", 1L)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isInternalServerError())
+            .andExpect(content().string("An Error has occurred."));
+
+    verify(feedbackService, times(1)).getFeedbackById(anyLong());
   }
 }
 

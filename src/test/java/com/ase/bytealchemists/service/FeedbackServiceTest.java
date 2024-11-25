@@ -98,5 +98,45 @@ public class FeedbackServiceTest {
     verify(feedbackRepository, times(0)).deleteById(1L);
     assertFalse(result, "The method should return false when feedback does not exist");
   }
+
+  /**
+   * Tests retrieving a feedback by its ID when it exists.
+   */
+  @Test
+  public void testGetFeedbackById_Success() {
+    // Arrange
+    FeedbackEntity feedback = new FeedbackEntity(1L, 1L, 101L, 5, "Excellent service!");
+
+    when(feedbackRepository.findById(1L)).thenReturn(Optional.of(feedback));
+
+    // Act
+    Optional<FeedbackEntity> result = feedbackService.getFeedbackById(1L);
+
+    // Assert
+    assertTrue(result.isPresent(), "Feedback should be present");
+    assertEquals(1L, result.get().getId(), "Feedback ID should match");
+    assertEquals(1L, result.get().getUserId(), "User ID should match");
+    assertEquals(101L, result.get().getServiceId(), "Service ID should match");
+    assertEquals(5, result.get().getRating(), "Rating should match");
+    assertEquals("Excellent service!", result.get().getComment(), "Comment should match");
+
+    verify(feedbackRepository, times(1)).findById(1L);
+  }
+
+  /**
+   * Tests retrieving a feedback by its ID when it does not exist.
+   */
+  @Test
+  public void testGetFeedbackById_NotFound() {
+    // Arrange
+    when(feedbackRepository.findById(999L)).thenReturn(Optional.empty());
+
+    // Act
+    Optional<FeedbackEntity> result = feedbackService.getFeedbackById(999L);
+
+    // Assert
+    assertFalse(result.isPresent(), "Feedback should not be present");
+    verify(feedbackRepository, times(1)).findById(999L);
+  }
 }
 
