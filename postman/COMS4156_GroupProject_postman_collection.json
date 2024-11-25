@@ -1,0 +1,1102 @@
+{
+	"info": {
+		"_postman_id": "d91ccb08-b08d-43fc-a438-191b70484bae",
+		"name": "COMS4156_GroupProject",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38607221"
+	},
+	"item": [
+		{
+			"name": "Get All Services Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Service Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'text/plain;charset=UTF-8')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"name\": \"New Serice\",\n   \"category\": \"shelters\",\n   \"latitude\": 80,\n   \"longitude\": -73.985428,\n   \"address\": \"12 Main St, New York\",\n   \"city\": \"New York\",\n   \"state\": \"NJ\",\n   \"zipcode\": \"10001\",\n   \"contactNumber\": \"123-456-7890\",\n   \"operationHour\": \"9 AM - 5 PM\",\n   \"availability\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Service Failure Client 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'text/plain;charset=UTF-8')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"name\": \"New Serice\",\n   \"category\": \"test\",\n   \"latitude\": 80,\n   \"longitude\": -73.985428,\n   \"address\": \"12 Main St, New York\",\n   \"city\": \"New York\",\n   \"state\": \"NJ\",\n   \"zipcode\": \"10001\",\n   \"contactNumber\": \"123-456-7890\",\n   \"operationHour\": \"9 AM - 5 PM\",\n   \"availability\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Service Failure Client2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"name\": \"\",\n   \"category\": \"shelters\",\n   \"latitude\": 80,\n   \"longitude\": -73.985428,\n   \"address\": \"12 Main St, New York\",\n   \"city\": \"New York\",\n   \"state\": \"NJ\",\n   \"zipcode\": \"10001\",\n   \"contactNumber\": \"123-456-7890\",\n   \"operationHour\": \"9 AM - 5 PM\",\n   \"availability\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Service Failure Client3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"name\": \"New Serice\",\n   \"category\": \"shelters\",\n   \"latitude\": 200,\n   \"longitude\": -73.985428,\n   \"address\": \"12 Main St, New York\",\n   \"city\": \"New York\",\n   \"state\": \"NJ\",\n   \"zipcode\": \"10001\",\n   \"contactNumber\": \"123-456-7890\",\n   \"operationHour\": \"9 AM - 5 PM\",\n   \"availability\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Service Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							"pm.test('Response body is empty', function () {",
+							"        pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/3",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Service Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test('Response body is empty', function () {",
+							"        pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Service Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Updated Serice\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/10",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Service Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test('Response body is empty', function () {",
+							"        pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Updated Serice\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Service By Id Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/10",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Service By Id Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test('Response body is empty', function () {",
+							"        pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Service Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/query?category=shelters&availability=true",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"query"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "shelters"
+						},
+						{
+							"key": "availability",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Service Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Response is an empty array\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array').that.is.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/query?category=test",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"query"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Category Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Category Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/health_center",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories",
+						"name",
+						"health_center"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Category Failure Client1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([409]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/shelters",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories",
+						"name",
+						"shelters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Category Failure Client2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/ ",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories",
+						"name",
+						" "
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Category Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/health_center",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories",
+						"name",
+						"health_center"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Category Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/test",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories",
+						"name",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Feedback Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'text/plain;charset=UTF-8')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": 1,\n  \"serviceId\": 101,\n  \"comment\": \"Excellent Service!\",\n  \"rating\": 5\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/feedback",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Feedback Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 500\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([500]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": 1,\n  \"serviceId\": 101,\n  \"commenT\": \"Excellent Service!\",\n  \"rating\": 5\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/feedback",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deleter Feedback Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/feedback/1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"feedback",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deleter Feedback Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/feedback/-1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"feedback",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
