@@ -123,6 +123,12 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<!-- 确保排除路径正确 -->
+						<exclude>com/ase/bytealchemists/config/*</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
