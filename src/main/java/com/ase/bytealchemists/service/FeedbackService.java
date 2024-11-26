@@ -2,6 +2,7 @@ package com.ase.bytealchemists.service;
 
 import com.ase.bytealchemists.model.FeedbackEntity;
 import com.ase.bytealchemists.repository.FeedbackRepository;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,17 @@ public class FeedbackService {
       return false;
     }
   }
+
+  /**
+   * Retrieves all feedback entries for a specific service ID.
+   *
+   * @param serviceId The ID of the service to retrieve feedback for.
+   * @return A list of feedback entities associated with the service ID.
+   */
+  public List<FeedbackEntity> getFeedbackByServiceId(Long serviceId) {
+    return feedbackRepository.findAllByServiceId(serviceId);
+  }
+
 
   /**
    * Retrieves a feedback entry by its ID.

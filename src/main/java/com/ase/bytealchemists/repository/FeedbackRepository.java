@@ -1,6 +1,7 @@
 package com.ase.bytealchemists.repository;
 
 import com.ase.bytealchemists.model.FeedbackEntity;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +15,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FeedbackRepository extends JpaRepository<FeedbackEntity, Long> {
-
+  /**
+   * Finds all feedback entities by the associated service ID.
+   *
+   * @param serviceId The ID of the service to retrieve feedback for.
+   * @return A list of feedback entities.
+   */
+  List<FeedbackEntity> findAllByServiceId(Long serviceId);
 }
