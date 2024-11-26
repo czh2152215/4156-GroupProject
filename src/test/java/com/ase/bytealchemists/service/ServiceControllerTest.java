@@ -2,6 +2,8 @@ package com.ase.bytealchemists.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,24 +48,43 @@ public class ServiceControllerTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
+  // Test for registerService() method when success
   @Test
   void testRegisterService_ValidInput_ShouldReturn201() throws Exception {
     ServiceEntity serviceEntity = new ServiceEntity(
-        null, "Test Shelter", "shelters",
+        1L, "Test Shelter", "shelters",
         40.748817, -73.985428,
         "123 Main St", "New York", "NY", "10001",
         "123-456-7890",
         "9 AM - 5 PM", true);
 
+    // Mocking service calls
     when(categoryService.categoryExists("shelters")).thenReturn(true);
     when(serviceService.registerService(any(ServiceEntity.class))).thenReturn(serviceEntity);
 
     mockMvc.perform(post("/services")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(serviceEntity)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(serviceEntity)))
         .andExpect(status().isCreated())
-        .andExpect(content().string("Service registered successfully"));
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.id").value(serviceEntity.getId()))
+        .andExpect(jsonPath("$.name").value(serviceEntity.getName()))
+        .andExpect(jsonPath("$.category").value(serviceEntity.getCategory()))
+        .andExpect(jsonPath("$.latitude").value(serviceEntity.getLatitude()))
+        .andExpect(jsonPath("$.longitude").value(serviceEntity.getLongitude()))
+        .andExpect(jsonPath("$.address").value(serviceEntity.getAddress()))
+        .andExpect(jsonPath("$.city").value(serviceEntity.getCity()))
+        .andExpect(jsonPath("$.state").value(serviceEntity.getState()))
+        .andExpect(jsonPath("$.zipcode").value(serviceEntity.getZipcode()))
+        .andExpect(jsonPath("$.contactNumber").value(serviceEntity.getContactNumber()))
+        .andExpect(jsonPath("$.operationHour").value(serviceEntity.getOperationHour()))
+        .andExpect(jsonPath("$.availability").value(serviceEntity.getAvailability()));
+
+    // Verifying the service interactions
+    verify(categoryService, times(1)).categoryExists("shelters");
+    verify(serviceService, times(1)).registerService(any(ServiceEntity.class));
   }
+
 
   @Test
   void testRegisterService_InvalidInput_ShouldReturn400() throws Exception {

@@ -39,18 +39,20 @@ public class CategoryService {
    *         false if the category already exists.
    */
   @Transactional
-  public boolean addCategoryByName(String categoryName) {
+  public Optional<CategoryEntity> addCategoryByName(String categoryName) {
     if (categoryRepository.existsByCategoryName(categoryName)) {
-      return false; // category already exists
+      // Return an empty Optional if the category already exists
+      return Optional.empty();
     }
+
+    // Create and save the new category
     CategoryEntity category = new CategoryEntity();
     category.setCategoryName(categoryName);
 
-    // save the new category
-    categoryRepository.save(category);
-    return true; // category added successfully
-
+    CategoryEntity savedCategory = categoryRepository.save(category);
+    return Optional.of(savedCategory);
   }
+
 
   /**
    * Deletes a category from the database by its name if it exists.
