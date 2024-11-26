@@ -74,6 +74,29 @@ public class FeedbackController {
   }
 
   /**
+   * Endpoint to retrieve all feedback for a specific service.
+   *
+   * @param serviceId The ID of the service to retrieve feedback for.
+   * @return A list of feedback entities associated with the service ID.
+   */
+  @GetMapping("/{serviceId}/feedback")
+  public ResponseEntity<?> getFeedbackByServiceId(@PathVariable("serviceId") Long serviceId) {
+    try {
+      var feedbackList = feedbackService.getFeedbackByServiceId(serviceId);
+
+      if (feedbackList.isEmpty()) {
+        return new ResponseEntity<>("No feedback found for service ID " + serviceId,
+            HttpStatus.NOT_FOUND);
+      } else {
+        return new ResponseEntity<>(feedbackList, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+      return handleException(e);
+    }
+  }
+
+
+  /**
    * Endpoint to retrieve a single feedback by its ID.
    *
    * @param feedbackId The ID of the feedback to retrieve.

@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import com.ase.bytealchemists.model.CategoryEntity;
 import com.ase.bytealchemists.model.FeedbackEntity;
 import com.ase.bytealchemists.repository.FeedbackRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -137,6 +138,66 @@ public class FeedbackServiceTest {
     // Assert
     assertFalse(result.isPresent(), "Feedback should not be present");
     verify(feedbackRepository, times(1)).findById(999L);
+  }
+
+  /**
+   * Tests retrieving feedback for a service when feedback exists.
+   */
+  @Test
+  public void testGetFeedbackByServiceId_Success() {
+    Long serviceId = 101L;
+    List<FeedbackEntity> feedbackList = List.of(
+        new FeedbackEntity(1L, 1L, serviceId, 5, "Excellent service!"),
+        new FeedbackEntity(2L, 2L, serviceId, 4, "Very good experience.")
+    );
+
+    when(feedbackRepository.findAllByServiceId(serviceId)).thenReturn(feedbackList);
+
+    List<FeedbackEntity> result = feedbackService.getFeedbackByServiceId(serviceId);
+
+    assertNotNull(result, "The feedback list should not be null");
+    assertEquals(2, result.size(), "There should be 2 feedback entries");
+    assertEquals(serviceId, result.get(0).getServiceId(),
+        "Service ID should match for first entry");
+    assertEquals("Excellent service!", result.get(0).getComment(),
+        "Comment should match for first entry");
+    assertEquals("Very good experience.", result.get(1).getComment(),
+        "Comment should match for second entry");
+
+    verify(feedbackRepository, times(1)).findAllByServiceId(serviceId);
+  }
+
+  /**
+   * Tests retrieving feedback for a service when no feedback exists.
+   */
+  @Test
+  public void testGetFeedbackByServiceId_NoFeedback() {
+    Long serviceId = 999L;
+    when(feedbackRepository.findAllByServiceId(serviceId)).thenReturn(List.of());
+
+    List<FeedbackEntity> result = feedbackService.getFeedbackByServiceId(serviceId);
+
+    assertNotNull(result, "The result should not be null");
+    assertTrue(result.isEmpty(), "The feedback list should be empty");
+
+    verify(feedbackRepository, times(1)).findAllByServiceId(serviceId);
+  }
+
+  /**
+   * Tests retrieving feedback for a service when the service ID is null.
+   */
+  @Test
+  public void testGetFeedbackByServiceId_NullServiceId() {
+    when(feedbackRepository.findAllByServiceId(null)).thenThrow(new
+        IllegalArgumentException("Service ID cannot be null"));
+
+    try {
+      feedbackService.getFeedbackByServiceId(null);
+    } catch (IllegalArgumentException e) {
+      assertEquals("Service ID cannot be null", e.getMessage(), "Exception message should match");
+    }
+
+    verify(feedbackRepository, times(1)).findAllByServiceId(null);
   }
 }
 
