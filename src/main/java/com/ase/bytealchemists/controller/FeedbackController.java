@@ -3,6 +3,7 @@ package com.ase.bytealchemists.controller;
 import com.ase.bytealchemists.model.FeedbackEntity;
 import com.ase.bytealchemists.service.FeedbackService;
 import jakarta.validation.Valid;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -85,8 +86,15 @@ public class FeedbackController {
       var feedbackList = feedbackService.getFeedbackByServiceId(serviceId);
 
       if (feedbackList.isEmpty()) {
-        return new ResponseEntity<>("No feedback found for service ID " + serviceId,
-            HttpStatus.NOT_FOUND);
+        // Include a message alongside the empty feedback list
+        return new ResponseEntity<>(
+            Map.of(
+                "serviceId", serviceId,
+                "feedback", feedbackList,
+                "message", "No feedback available for this service."
+            ),
+            HttpStatus.OK
+        );
       } else {
         return new ResponseEntity<>(feedbackList, HttpStatus.OK);
       }
@@ -94,6 +102,7 @@ public class FeedbackController {
       return handleException(e);
     }
   }
+
 
 
   /**

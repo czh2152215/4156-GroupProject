@@ -26,7 +26,6 @@ public class FeedbackService {
    * @return The saved feedback entity.
    */
   public FeedbackEntity createFeedback(FeedbackEntity feedbackEntity) {
-    // Save the feedback to the database using the repository
     return feedbackRepository.save(feedbackEntity);
   }
 
