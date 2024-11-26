@@ -45,14 +45,13 @@ public class UserControllerTest {
     mockUser.setUsername("johndoe");
     mockUser.setFirstName("John");
     mockUser.setLastName("Doe");
-    mockUser.setPassword("securepassword");
+    mockUser.setPassword("securepassword"); // Normally hashed, but mocked here
     mockUser.setEmail("johndoe@example.com");
     mockUser.setPhone("+1234567890");
 
-    // Mocking service behavior
     when(userService.registerUser(any(UserEntity.class))).thenReturn(true);
+    when(userService.findUserByUsername("johndoe")).thenReturn(Optional.of(mockUser));
 
-    // Perform POST request
     mockMvc.perform(post("/user/signup")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
@@ -66,9 +65,14 @@ public class UserControllerTest {
                         }
                         """))
         .andExpect(status().isCreated())
-        .andExpect(content().string("User registered successfully."));
+        .andExpect(jsonPath("$.username").value("johndoe"))
+        .andExpect(jsonPath("$.firstName").value("John"))
+        .andExpect(jsonPath("$.lastName").value("Doe"))
+        .andExpect(jsonPath("$.email").value("johndoe@example.com"))
+        .andExpect(jsonPath("$.phone").value("+1234567890"));
 
     verify(userService, times(1)).registerUser(any(UserEntity.class));
+    verify(userService, times(1)).findUserByUsername("johndoe");
   }
 
   /**

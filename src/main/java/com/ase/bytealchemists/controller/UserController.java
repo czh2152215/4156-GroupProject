@@ -39,7 +39,7 @@ public class UserController {
     try {
       boolean isRegistered = userService.registerUser(userEntity);
       if (isRegistered) {
-        return new ResponseEntity<>("User registered successfully.", HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.findUserByUsername(userEntity.getUsername()), HttpStatus.CREATED);
       } else {
         return new ResponseEntity<>("Username or email already exists.", HttpStatus.CONFLICT);
       }
@@ -125,8 +125,6 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
   }
-
-
 }
 
 
