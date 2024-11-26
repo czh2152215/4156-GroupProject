@@ -74,25 +74,32 @@ public class CategoryServiceTest {
   // Test for addCategoryByName method when category is added successfully.
   @Test
   public void testAddCategoryByNameCategoryWhenSuccess() {
-    when(categoryRepository.existsByCategoryName("Shelter")).thenReturn(false);
+    String categoryName = "Shelters";
+    CategoryEntity mockCategory = new CategoryEntity();
+    mockCategory.setId(1L);
+    mockCategory.setCategoryName(categoryName);
 
-    boolean addResult = categoryService.addCategoryByName("Shelter");
+    when(categoryRepository.existsByCategoryName(categoryName)).thenReturn(false);
+    when(categoryRepository.save(any(CategoryEntity.class))).thenReturn(mockCategory);
 
-    assertTrue(addResult);
-    verify(categoryRepository, times(1)).existsByCategoryName("Shelter");
+    Optional<CategoryEntity> result = categoryService.addCategoryByName(categoryName);
+
+    assertTrue(result.isPresent());
+    assertEquals(categoryName, result.get().getCategoryName());
     verify(categoryRepository, times(1)).save(any(CategoryEntity.class));
   }
 
   // Test for addCategoryByName method when category cannot be added.
   @Test
   public void testAddCategoryByNameCategoryWhenFail() {
-    when(categoryRepository.existsByCategoryName("Shelter")).thenReturn(true);
+    String categoryName = "Shelters";
 
-    boolean addResult = categoryService.addCategoryByName("Shelter");
+    when(categoryRepository.existsByCategoryName(categoryName)).thenReturn(true);
 
-    assertFalse(addResult);
-    verify(categoryRepository, times(1)).existsByCategoryName("Shelter");
-    verify(categoryRepository, times(0)).save(any(CategoryEntity.class));
+    Optional<CategoryEntity> result = categoryService.addCategoryByName(categoryName);
+
+    assertFalse(result.isPresent());
+    verify(categoryRepository, never()).save(any(CategoryEntity.class));
   }
 
   // Test for deleteCategoryByName() method when category is deleted successfully

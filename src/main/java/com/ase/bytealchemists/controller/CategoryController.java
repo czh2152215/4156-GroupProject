@@ -1,7 +1,9 @@
 package com.ase.bytealchemists.controller;
 
+import com.ase.bytealchemists.model.CategoryEntity;
 import com.ase.bytealchemists.service.CategoryService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,8 +47,10 @@ public class CategoryController {
       if (name.trim().isEmpty()) {
         return new ResponseEntity<>("Invalid category name.", HttpStatus.BAD_REQUEST);
       }
-      if (categoryService.addCategoryByName(name)) {
-        return new ResponseEntity<>("Attribute was updated successfully.", HttpStatus.OK);
+
+      Optional<CategoryEntity> categoryEntity = categoryService.addCategoryByName(name);
+      if (categoryEntity.isPresent()) {
+        return new ResponseEntity<>(categoryEntity, HttpStatus.CREATED);
       } else {
         return new ResponseEntity<>("Category already exists.", HttpStatus.CONFLICT);
       }

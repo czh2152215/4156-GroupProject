@@ -7,13 +7,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ase.bytealchemists.config.TestSecurityConfig;
 import com.ase.bytealchemists.controller.CategoryController;
+import com.ase.bytealchemists.model.CategoryEntity;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -79,28 +82,36 @@ public class CategoryControllerTest {
   // Test for addCategoryByName() method when category is added successfully.
   @Test
   public void testAddCategoryByName_Success() throws Exception {
-    when(categoryService.addCategoryByName("Shelter")).thenReturn(true);
+    String categoryName = "Shelters";
+    CategoryEntity mockCategory = new CategoryEntity();
+    mockCategory.setId(1L);
+    mockCategory.setCategoryName(categoryName);
 
-    // Perform POST request and verify the response
-    mockMvc.perform(post("/services/categories/name/Shelter")
+    when(categoryService.addCategoryByName(categoryName)).thenReturn(Optional.of(mockCategory));
+
+    // Act & Assert
+    mockMvc.perform(post("/services/categories/name/{name}", categoryName)
             .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Attribute was updated successfully."));
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").value(1))
+        .andExpect(jsonPath("$.categoryName").value(categoryName));
 
-    verify(categoryService, times(1)).addCategoryByName("Shelter");
+    verify(categoryService, times(1)).addCategoryByName(categoryName);
   }
 
   // Test for addCategoryByName() method when category cannot be added.
   @Test
   public void testAddCategoryByName_CategoryAlreadyExists() throws Exception {
-    when(categoryService.addCategoryByName("Shelter")).thenReturn(false);
+    String categoryName = "Shelters";
 
-    mockMvc.perform(post("/services/categories/name/Shelter")
+    when(categoryService.addCategoryByName(categoryName)).thenReturn(Optional.empty());
+
+    mockMvc.perform(post("/services/categories/name/{name}", categoryName)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isConflict())
         .andExpect(content().string("Category already exists."));
 
-    verify(categoryService, times(1)).addCategoryByName("Shelter");
+    verify(categoryService, times(1)).addCategoryByName(categoryName);
   }
 
   // Test for addCategoryByName() method when the input category name is a blank string.

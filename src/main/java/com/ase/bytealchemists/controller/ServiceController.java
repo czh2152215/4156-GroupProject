@@ -163,8 +163,8 @@ public class ServiceController {
     }
 
     // Save the service if validation and category checks pass
-    serviceService.registerService(serviceEntity);
-    return new ResponseEntity<>("Service registered successfully", HttpStatus.CREATED);
+    ServiceEntity savedService = serviceService.registerService(serviceEntity);
+    return new ResponseEntity<>(savedService, HttpStatus.CREATED);
   }
 
   /**
