@@ -7,6 +7,188 @@
 	},
 	"item": [
 		{
+			"name": "Get Category Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Category Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							"",
+							"// Save the `categoryName` as a collection variable",
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set(\"categoryName\",",
+							"jsonData.categoryName);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/shelters",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories",
+						"name",
+						"shelters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Category Failure Client1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([409]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/{{categoryName}}",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories",
+						"name",
+						"{{categoryName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Category Failure Client2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/ ",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"categories",
+						"name",
+						" "
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get All Services Success",
 			"event": [
 				{
@@ -653,188 +835,6 @@
 			"response": []
 		},
 		{
-			"name": "Get Category Success",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
-							"});",
-							"",
-							"pm.test(\"Response is a string\", function () {",
-							"    const responseText = pm.response.text();",
-							"    pm.expect(responseText).to.be.a(\"string\");",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"categories"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Category Success",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
-							"});",
-							"",
-							"pm.test('Response should be JSON', function ()",
-							"    {",
-							"\tpm.response.to.have.header('Content-Type', 'application/json')",
-							"});",
-							"",
-							"// Save the `categoryName` as a collection variable",
-							"const jsonData = pm.response.json();",
-							"pm.collectionVariables.set(\"categoryName\",",
-							"jsonData.categoryName);"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/health_center",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"categories",
-						"name",
-						"health_center"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Category Failure Client1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 409\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([409]);",
-							"});",
-							"",
-							"pm.test(\"Response is a string\", function () {",
-							"    const responseText = pm.response.text();",
-							"    pm.expect(responseText).to.be.a(\"string\");",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/{{categoryName}}",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"categories",
-						"name",
-						"{{categoryName}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Category Failure Client2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 400\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
-							"});",
-							"",
-							"pm.test(\"Response is a string\", function () {",
-							"    const responseText = pm.response.text();",
-							"    pm.expect(responseText).to.be.a(\"string\");",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/ ",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"categories",
-						"name",
-						" "
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Delete Category Success",
 			"event": [
 				{
@@ -1138,8 +1138,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
 							"});",
 							"",
 							"pm.test(\"Response is a string\", function () {",
