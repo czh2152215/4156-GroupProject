@@ -7,6 +7,7 @@
 - [Introduction](#introduction)
 - [Team Information](#team-information)
 - [Prerequisites](#prerequisites)
+- [Deployment](#deployment)
 - [Installation](#installation)
 - [Usage](#usage)
   - [API Endpoints](#api-endpoints)
@@ -40,6 +41,18 @@ Before you begin, ensure you have met the following requirements:
 - **Postman**: For API testing. [Download Postman](https://www.postman.com/downloads/)
 - **IDE**: Such as IntelliJ IDEA or Eclipse for development.
 
+## Deployment
+1. **Frontend deployment**
+```
+https://storage.googleapis.com/byte-ai-chemist-frontend/index.html
+```
+**Note**: Since the frontend is deployed as a static website, and we didn't configure the load balancer, refreshing the page will result in "file not found" error. So, please do not refresh the page and use the link provided by our site to navigate. 
+
+
+2. **Service deployment**
+```
+https://bytealchemists.ue.r.appspot.com
+```
 ## Installation
 
 Follow these steps to set up the project locally:
