@@ -89,5 +89,29 @@ public class UserService {
     user.setPassword(passwordEncoder.encode(newPassword));
     userRepository.save(user);
   }
+
+  /**
+   * Delete a user in the database by name.
+   * This method checks if a user with the specified id is present
+   * in the database first. If found, then it can be deleted and return true;
+   * else return false.
+   *
+   * @param name the name of the user to delete.
+   * @return true if the user is deleted successfully,
+   *         false if the user does not exist.
+   */
+  public boolean deleteUserByName(String name) {
+    // Check if the specified user exists
+    Optional<UserEntity> userEntity = userRepository.findByUsername(name);
+
+    if (userEntity.isPresent()) {
+      // If the user exists, delete it
+      userRepository.delete(userEntity.get());
+      return true;
+    } else {
+      // If the user does not exist, return false
+      return false;
+    }
+  }
 }
 

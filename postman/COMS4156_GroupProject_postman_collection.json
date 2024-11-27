@@ -61,9 +61,13 @@
 							"",
 							"pm.test('Response should be JSON', function ()",
 							"    {",
-							"\tpm.response.to.have.header('Content-Type', 'text/plain;charset=UTF-8')",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
 							"});",
-							""
+							"",
+							"// Save the `id` as a collection variable",
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set(\"serviceId\",",
+							"jsonData.id);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -260,278 +264,6 @@
 			"response": []
 		},
 		{
-			"name": "Delete Service Success",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 204\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
-							"});",
-							"",
-							"pm.test('Response body is empty', function () {",
-							"        pm.expect(pm.response.text()).to.be.empty;",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/3",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"3"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Service Failure",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 404\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
-							"});",
-							"",
-							"pm.test('Response body is empty', function () {",
-							"        pm.expect(pm.response.text()).to.be.empty;",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"-1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Service Success",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
-							"});",
-							"",
-							"pm.test('Response should be JSON', function ()",
-							"    {",
-							"\tpm.response.to.have.header('Content-Type', 'application/json')",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Updated Serice\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/10",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"10"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Service Failure",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 404\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
-							"});",
-							"",
-							"pm.test('Response body is empty', function () {",
-							"        pm.expect(pm.response.text()).to.be.empty;",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Updated Serice\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"-1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Service By Id Success",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
-							"});",
-							"",
-							"pm.test('Response should be JSON', function ()",
-							"    {",
-							"\tpm.response.to.have.header('Content-Type', 'application/json')",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/10",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"10"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Service By Id Failure",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 404\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
-							"});",
-							"",
-							"pm.test('Response body is empty', function () {",
-							"        pm.expect(pm.response.text()).to.be.empty;",
-							"});",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
-					"protocol": "https",
-					"host": [
-						"bytealchemists",
-						"ue",
-						"r",
-						"appspot",
-						"com"
-					],
-					"path": [
-						"services",
-						"-1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Query Service Success",
 			"event": [
 				{
@@ -639,6 +371,288 @@
 			"response": []
 		},
 		{
+			"name": "Get Service By ID Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/{{serviceId}}",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"{{serviceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Service By ID Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test('Response body is empty', function () {",
+							"        pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Service Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Updated Serice\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/{{serviceId}}",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"{{serviceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Service Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test('Response body is empty', function () {",
+							"        pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Updated Serice\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Service Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							"",
+							"pm.test('Response body is empty', function () {",
+							"        pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/{{serviceId}}",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"{{serviceId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Service Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test('Response body is empty', function () {",
+							"        pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Category Success",
 			"event": [
 				{
@@ -682,21 +696,25 @@
 			"response": []
 		},
 		{
-			"name": "Add Category Success",
+			"name": "Create Category Success",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
 							"});",
 							"",
-							"pm.test(\"Response is a string\", function () {",
-							"    const responseText = pm.response.text();",
-							"    pm.expect(responseText).to.be.a(\"string\");",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
 							"});",
-							""
+							"",
+							"// Save the `categoryName` as a collection variable",
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set(\"categoryName\",",
+							"jsonData.categoryName);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -727,7 +745,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Category Failure Client1",
+			"name": "Create Category Failure Client1",
 			"event": [
 				{
 					"listen": "test",
@@ -752,7 +770,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/shelters",
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/{{categoryName}}",
 					"protocol": "https",
 					"host": [
 						"bytealchemists",
@@ -765,14 +783,14 @@
 						"services",
 						"categories",
 						"name",
-						"shelters"
+						"{{categoryName}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Add Category Failure Client2",
+			"name": "Create Category Failure Client2",
 			"event": [
 				{
 					"listen": "test",
@@ -842,7 +860,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/health_center",
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/categories/name/{{categoryName}}",
 					"protocol": "https",
 					"host": [
 						"bytealchemists",
@@ -855,7 +873,7 @@
 						"services",
 						"categories",
 						"name",
-						"health_center"
+						"{{categoryName}}"
 					]
 				}
 			},
@@ -907,7 +925,616 @@
 			"response": []
 		},
 		{
-			"name": "Add Feedback Success",
+			"name": "User Signup Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/signup",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Signup Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([409]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/signup",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/login",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login Failure Client1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([401]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"1233\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/login",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login Failure Client2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"test\",\n  \"password\": \"123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/login",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login Failure Client3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"\",\n  \"password\": \"123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/login",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/resetPassword?username=testuser&newPassword=newSecurePassword123",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"resetPassword"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "testuser"
+						},
+						{
+							"key": "newPassword",
+							"value": "newSecurePassword123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password Failure Client1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/resetPassword?username=test&newPassword=newSecurePassword123",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"resetPassword"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "test"
+						},
+						{
+							"key": "newPassword",
+							"value": "newSecurePassword123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password Failure Client2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/resetPassword?username=&newPassword=newSecurePassword123",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"resetPassword"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": ""
+						},
+						{
+							"key": "newPassword",
+							"value": "newSecurePassword123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password Failure Client3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/resetPassword?username=testuser&newPassword=",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"resetPassword"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "testuser"
+						},
+						{
+							"key": "newPassword",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/testuser",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"testuser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/user/abcde",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"user",
+						"abcde"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Feedback Success",
 			"event": [
 				{
 					"listen": "test",
@@ -919,9 +1546,16 @@
 							"",
 							"pm.test('Response should be JSON', function ()",
 							"    {",
-							"\tpm.response.to.have.header('Content-Type', 'text/plain;charset=UTF-8')",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
 							"});",
-							""
+							"",
+							"// Save the `id` as a collection variable",
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set(\"serviceId\",",
+							"jsonData.serviceId);",
+							"",
+							"pm.collectionVariables.set(\"feedback_id\",",
+							"jsonData.id);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -959,7 +1593,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Feedback Failure",
+			"name": "Create Feedback Failure",
 			"event": [
 				{
 					"listen": "test",
@@ -985,7 +1619,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"userId\": 1,\n  \"serviceId\": 101,\n  \"commenT\": \"Excellent Service!\",\n  \"rating\": 5\n}\n",
+					"raw": "{\n  \"userId\": 1,\n  \"serviceId\": 101,\n  \"COMMENT\": \"Excellent Service!\",\n  \"rating\": 5\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1005,6 +1639,182 @@
 					"path": [
 						"services",
 						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feedback By ServiceID Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/{{serviceId}}/feedback",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"{{serviceId}}",
+						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feedback By ServiceID Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/-1/feedback",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"-1",
+						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feedback By ID Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test('Response should be JSON', function ()",
+							"    {",
+							"\tpm.response.to.have.header('Content-Type', 'application/json')",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/feedback/{{feedback_id}}",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"feedback",
+						"{{feedback_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feedback By ID Failure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});",
+							"",
+							"pm.test(\"Response is a string\", function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.be.a(\"string\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/feedback/-1",
+					"protocol": "https",
+					"host": [
+						"bytealchemists",
+						"ue",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"services",
+						"feedback",
+						"-1"
 					]
 				}
 			},
@@ -1036,7 +1846,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://bytealchemists.ue.r.appspot.com/services/feedback/1",
+					"raw": "https://bytealchemists.ue.r.appspot.com/services/feedback/{{feedback_id}}",
 					"protocol": "https",
 					"host": [
 						"bytealchemists",
@@ -1048,7 +1858,7 @@
 					"path": [
 						"services",
 						"feedback",
-						"1"
+						"{{feedback_id}}"
 					]
 				}
 			},
@@ -1097,6 +1907,24 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "dynamicServiceId",
+			"value": ""
+		},
+		{
+			"key": "serviceId",
+			"value": ""
+		},
+		{
+			"key": "categoryName",
+			"value": ""
+		},
+		{
+			"key": "feedback_id",
+			"value": ""
 		}
 	]
 }

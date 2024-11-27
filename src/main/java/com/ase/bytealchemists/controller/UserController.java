@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -126,7 +129,28 @@ public class UserController {
     }
   }
 
-
+  /**
+   * End point for deleting a user by name.
+   * This method attempts to delete a user by the specified id.
+   *
+   * @param username the name of the user to be deleted.
+   * @return A {@code ResponseEntity} object containing an HTTP 200 response
+   *         with an appropriate message or the proper status code in tune
+   *         with what has happened.
+   */
+  @DeleteMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> deleteUserByName(@PathVariable("username") String username) {
+    try {
+      if (userService.deleteUserByName(username)) {
+        return new ResponseEntity<>("User was deleted successfully.", HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>("This user does not exist.", HttpStatus.NOT_FOUND);
+      }
+    } catch (Exception e) {
+      return new ResponseEntity<>("An Error has occurred.",
+          HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
 
 

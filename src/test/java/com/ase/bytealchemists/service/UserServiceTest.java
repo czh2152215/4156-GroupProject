@@ -199,4 +199,35 @@ public class UserServiceTest {
     assertFalse(result.isPresent(), "No user should be found for null username.");
     verify(userRepository, times(1)).findByUsername(null);
   }
+
+  /**
+   * Tests for deleteUserByName() method when user exists.
+   */
+  @Test
+  void testDeleteUserByIdWhenUserExists() {
+    String username = "Peter";
+
+    UserEntity mockUser = new UserEntity();
+    mockUser.setUsername(username);
+
+    when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockUser));
+
+    boolean result = userService.deleteUserByName(username);
+
+    assertTrue(result);
+  }
+
+  /**
+   * Tests for deleteUserByName() method when user doesn't exist.
+   */
+  @Test
+  void testDeleteUserByIdWhenUserDoesNotExist() {
+    String username = "Peter";
+
+    when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+    boolean result = userService.deleteUserByName(username);
+
+    assertFalse(result);
+  }
 }

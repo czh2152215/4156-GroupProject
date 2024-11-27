@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -325,6 +326,51 @@ public class UserControllerTest {
         .andExpect(status().isBadRequest());
 
     verify(userService, times(0)).resetPassword(any(String.class), any(String.class));
+  }
+
+  /**
+   * Test for deleteUserByName() method when username deleted successfully.
+   */
+  @Test
+  public void testDeleteUserByIdWhenSuccess() throws Exception {
+    when(userService.deleteUserByName("Peter")).thenReturn(true);
+
+    mockMvc.perform(delete("/user/{username}", "Peter")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().string("User was deleted successfully."));
+
+    verify(userService, times(1)).deleteUserByName("Peter");
+  }
+
+  /**
+   * Test for deleteUserByName() method when username does not exist.
+   */
+  @Test
+  public void testDeleteUserByIdWhenFail() throws Exception {
+    when(userService.deleteUserByName("Peter")).thenReturn(false);
+
+    mockMvc.perform(delete("/user/{username}", "Peter")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string("This user does not exist."));
+
+    verify(userService, times(1)).deleteUserByName("Peter");
+  }
+
+  /**
+   * Test for deleteUserByName() method when there is exception.
+   */
+  @Test
+  public void testDeleteUserByIdWhenExceptionExists() throws Exception {
+    when(userService.deleteUserByName("Peter")).thenThrow(new RuntimeException("Database error"));
+
+    mockMvc.perform(delete("/user/{username}", "Peter")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string("An Error has occurred."));
+
+    verify(userService, times(1)).deleteUserByName("Peter");
   }
 
 }
