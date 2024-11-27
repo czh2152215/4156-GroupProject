@@ -130,7 +130,7 @@ Our API provides various endpoints to manage and access homeless support service
     - `409 Conflict`
     - `500 Internal Server Error`
   - Body:
-    - 200 OK: A success message indicating the category was updated successfully, e.g., "Attribute was updated successfully."
+    - 200 OK: JSON Object of `Category Entity`.
     - 400 Bad Request: An error message like "Invalid category name."
     - 409 Conflict: An error message like "Category already exists."
     - 500 Internal Error: A plain text message like "An error has occurred" in case of an exception.
@@ -141,7 +141,7 @@ Our API provides various endpoints to manage and access homeless support service
 - **Endpoint:** `DELETE /services/categories/name/{name}`
 - **Description:** Deletes an existing service category.
 - **Response:**
-  - **Status Code:** `If successful, returns a success message with HTTP status 200 (OK), otherwise 404 Not Found`
+  - **Status Code:** `If success, returns a success message with HTTP status 200 (OK), otherwise 404 Not Found`
 
 #### 5. **Register a New Service**
 
@@ -239,21 +239,124 @@ Our API provides various endpoints to manage and access homeless support service
   - **Status Code:** `200 OK`
   - **Body:** JSON array of matching `ServiceEntity` objects.
 
+#### 10. **User Signup**
 
+- **Endpoint:** `POST /user/signup`
+- **Description:** create an account for user based on query parameters.
+- **Query Parameters:**
+  - `username`: Username the user want to set.
+  - `email`: Email address of the user.
+  - `password`: Password of the account the user wants to set.
+  - `firstName`: User's first name.
+  - `lastName`: User's last name.
+- **Response:**
+  - **Status Code:** `201 CREATED`; **Body:** "User registered successfully.".
+  - **Status Code:** `409 CONFLICT`; **Body:** "Username or email already exists.".
+  - **Status Code:** `500 INTERNAL SERVER ERROR`; **Body:** "An error occurred while registering the user.".
 
+#### 11. **User Login**
 
+- **Endpoint:** `POST /user/login`
+- **Description:** login the existing account.
+- **Query Parameters:**
+  - `username`: Username the user set before.
+  - `password`: Password the user set before.
+- **Response:**
+  - **Status Code:** `200 OK`; **Body:** JSON object of showing userId and message: "Login successful".
+  - **Status Code:** `400 BAD REQUEST`; **Body:** "Username cannot be blank"/"Password cannot be blank".
+  - **Status Code:** `401 UNAUTHORIZED`; **Body:** "Invalid credentials".
+  - **Status Code:** `404 NOT FOUND`; **Body:** "User not found".
+  - **Status Code:** `500 INTERNAL SERVER ERROR`; **Body:** "An error occurred during login".
 
+#### 12. **User ResetPassword**
 
+- **Endpoint:** `POST /user/resetPassword`
+- **Description:** reset password for the existing account.
+- **Query Parameters:**
+  - `username`: Username the user set before.
+  - `newPassword`: New password the user wants to set.
+- **Response:**
+  - **Status Code:** `200 OK`; **Body:** "Password updated successfully.".
+  - **Status Code:** `400 BAD REQUEST`; **Body:** "Username cannot be blank"/"Password cannot be blank".
 
-## Style Checking and Documentation
+#### 13. **Deleter User**
 
-Our codebase adheres to the **Java Code Conventions** and is compliant with **Checkstyle** for style checking. All non-trivial code includes proper documentation using **Javadoc**.
+- **Endpoint:** `DELETE /user/{username}`
+- **Description:** Delete the existing user by username.
+- **Query Parameters:**
+  - `username`: Username the user set before.
+- **Response:**
+  - **Status Code:** `201 CREATED`; **Body:** "User was deleted successfully.".
+  - **Status Code:** `404 NOT FOUND`; **Body:** "This user does not exist.".
+  - **Status Code:** `500 INTERNAL SERVER ERROR`; **Body:** "An error occurred.".
 
-### Style Checker Reports
+#### 14. **Create Feedback**
+
+- **Endpoint:** `POST /services/feedback`
+- **Description:** Create a feedback
+- **Query Parameters:**
+  - `userId`: The user's id.
+  - `serviceId`: Service Id in which the user want to leave comments for.
+  - `comment`: Comment the user wants to leave
+  - `rating`: Rating score the user wants to leave, range from 1 to 5.
+- **Response:**
+  - **Status Code:** `200 OK`; **Body:** JSON object of feedback entity.
+  - **Status Code:** `500 INTERNAL SERVER ERROR`; **Body:** "An error occurred while creating the feedback.".
+
+#### 15. **Get Feedbacks From Service ID**
+
+- **Endpoint:** `GET /services/{serviceId}/feedback`
+- **Description:** Get feedbacks from a service based on its service ID.
+- **Query Parameters:**
+  - `serviceId`: The ID of the specific service.
+- **Response:**
+  - **Status Code:** `200 OK`; **Body:** An array of feedback entity.
+  - **Status Code:** `500 INTERNAL SERVER ERROR`; **Body:** "An error occurred.".
+
+#### 16. **Get Feedbacks From Feedback ID**
+
+- **Endpoint:** `GET /services/feedback/{feedback_Id}`
+- **Description:** Get a feedback based on feedback ID.
+- **Query Parameters:**
+  - `feedback_Id`: The ID of the specific feedback.
+- **Response:**
+  - **Status Code:** `200 OK`; **Body:** JSON Object of feedback entity.
+  - **Status Code:** `404 NOT FOUND`; **Body:** "Feedback with `feedbackId` not found.".
+  - **Status Code:** `500 INTERNAL SERVER ERROR`; **Body:** "An error occurred.".
+
+#### 17. **Delete Feedbacks Based on Feedback ID**
+
+- **Endpoint:** `DELETE /services/feedback/{feedback_Id}`
+- **Description:** Delete a feedback based on feedback ID.
+- **Query Parameters:**
+  - `feedback_Id`: The ID of the specific feedback.
+- **Response:**
+  - **Status Code:** `200 OK`; **Body:** "Feedback was deleted successfully.".
+  - **Status Code:** `404 NOT FOUND`; **Body:** "This feedback does not exist.".
+  - **Status Code:** `500 INTERNAL SERVER ERROR`; **Body:** "An error occurred.".
+
+### Style Checker Report
 
 We utilize **Checkstyle** to enforce coding standards. Reports are included in the repository under the `reports/` directory.
+Here is the report as of the day of 11/27/24:
+![style check image1](reports/checkstyle_report1_november27.png)
+![style check image2](reports/checkstyle_report2_november27.png)
+
+### Branch Coverage Reporting ###
+
+We use JaCoCo to perform branch analysis in order to see the branch coverage of the relevant code 
+within the code base. See below for screenshots demonstrating output:
+![branch_coverage image](reports/codecoverage_report_november27.png)
+
+### Static Code Analysis ###
+We used PMD to perform static analysis on our codebase, see below for the most recent output:
+![static_analysis image](reports/static_analysis_report_november27.png)
+
+### Continuous Integration Report ##
+Waiting to update
 
 ### Documentation
+Our codebase adheres to the **Java Code Conventions** and is compliant with **Checkstyle** for style checking. All non-trivial code includes proper documentation using **Javadoc**.
 
 - **Javadoc:** All classes and major methods are documented using Javadoc. You can generate the documentation using Maven:
 

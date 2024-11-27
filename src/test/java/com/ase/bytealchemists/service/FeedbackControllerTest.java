@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,5 +203,70 @@ public class FeedbackControllerTest {
 
     verify(feedbackService, times(1)).getFeedbackById(anyLong());
   }
-}
 
+  /**
+   * Tests retrieving a feedback by Service ID when success.
+   */
+  @Test
+  public void testGetFeedbackByServiceIdWhenSuccess() throws Exception {
+    Long serviceId = 1L;
+
+    FeedbackEntity mockFeedback = new FeedbackEntity();
+    mockFeedback.setId(1L);
+    mockFeedback.setUserId(1L);
+    mockFeedback.setServiceId(serviceId);
+    mockFeedback.setRating(5);
+    mockFeedback.setComment("Excellent service!");
+
+    List<FeedbackEntity> mockFeedbackList = List.of(mockFeedback);
+
+    when(feedbackService.getFeedbackByServiceId(serviceId)).thenReturn(mockFeedbackList);
+
+    mockMvc.perform(get("/services/{serviceId}/feedback", serviceId)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].id").value(1L))
+        .andExpect(jsonPath("$[0].comment").value("Excellent service!"))
+        .andExpect(jsonPath("$[0].rating").value(5));
+
+    verify(feedbackService, times(1)).getFeedbackByServiceId(serviceId);
+  }
+
+  /**
+   * Tests retrieving a feedback by Service ID when there is no feedback for this service ID.
+   */
+  @Test
+  public void testGetFeedbackByServiceIdWhenNoFeedback() throws Exception {
+    Long serviceId = 1L;
+
+    when(feedbackService.getFeedbackByServiceId(serviceId)).thenReturn(Collections.emptyList());
+
+    mockMvc.perform(get("/services/{serviceId}/feedback", serviceId)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.serviceId").value(serviceId))
+        .andExpect(jsonPath("$.feedback").isEmpty())
+        .andExpect(jsonPath("$.message").value("No feedback available "
+                                                          + "for this service."));
+
+    verify(feedbackService, times(1)).getFeedbackByServiceId(serviceId);
+  }
+
+  /**
+   * Tests retrieving a feedback by Service ID when there is exception.
+   */
+  @Test
+  public void testGetFeedbackByServiceIdWhenExceptionExists() throws Exception {
+    Long serviceId = 1L;
+
+    when(feedbackService.getFeedbackByServiceId(serviceId))
+                                        .thenThrow(new RuntimeException("Unexpected error"));
+
+    mockMvc.perform(get("/services/{serviceId}/feedback", serviceId)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string("An Error has occurred."));
+
+    verify(feedbackService, times(1)).getFeedbackByServiceId(serviceId);
+  }
+}
