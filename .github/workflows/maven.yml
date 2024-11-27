@@ -10,7 +10,7 @@ name: Java CI with Maven and Postman
 
 on:
   push:
-    branches: [ "main", "addCI" ]
+    branches: [ "main", "FinishCI" ]
   pull_request:
     branches: [ "main" ]
 
