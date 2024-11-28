@@ -366,8 +366,12 @@ We used PMD to perform static analysis on our codebase, see below for the most r
 ![static_analysis image](reports/static_analysis_report_november27.png)
 
 ### Continuous Integration Report ##
-Waiting to update
+This repository using GitHub Actions to perform continuous integration, to view the latest results 
+go to the following link:
+https://github.com/czh2152215/4156-GroupProject/actions/workflows/maven.yml
 
+Please click on the latest job on the top under "X workflow runs" then click 'build' under jobs 
+finally click the drop down next to all the action items to read the logs made during their execution
 ### Documentation
 Our codebase adheres to the **Java Code Conventions** and is compliant with **Checkstyle** for style checking. All non-trivial code includes proper documentation using **Javadoc**.
 
